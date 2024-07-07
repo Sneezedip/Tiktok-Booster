@@ -1,3 +1,4 @@
 selenium
 pytesseract
 pillow
+fake_headers

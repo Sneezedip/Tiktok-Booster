@@ -1,10 +1,11 @@
-import time,configparser,os,sys,requests,zipfile
+import time,configparser,os,sys,requests,zipfile,webbrowser
 from Static.Static import Static
 try:
     from selenium import webdriver
     from selenium.webdriver.common.by import By
     import pytesseract
     from PIL import Image
+    from fake_headers import Headers
 except:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -19,7 +20,16 @@ def Download(url, extract_to='.'):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(extract_to)
     os.remove(zip_path)
-    
+def CheckVersion(current_version):
+    response = requests.get("https://raw.githubusercontent.com/Sneezedip/Tiktok-Booster/main/VERSION")
+    if response.text.strip() != current_version:
+        while True:
+            u = input("NEW VERSION FOUND. Want to update? (y/n)").lower()
+            if u == "y":
+                webbrowser.open("https://github.com/Sneezedip/Tiktok-Booster")
+                sys.exit()
+            elif u == "n":
+                return
 if not os.path.exists('Tesseract'):
     print('Downloading Tesseract, please wait..')
     url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'  # Substitua pelo URL do seu arquivo .zip
@@ -35,9 +45,11 @@ AMOUNT = config.getint('Settings','AMOUNT')
 class Program():
     def __init__(self):
         self.Options = webdriver.ChromeOptions()
+        for option in Static.ChromeOptions:
+            self.Options.add_argument(option)
+        if config.getboolean('Settings','HEADLESS'): self.Options.add_argument("--headless")
         print('Installing Extensions...')
         self.Options.add_extension('Extensions/ub.crx')
-        if config.getboolean('Settings','HEADLESS') : self.Options.add_argument('--headless')
         self.driver = webdriver.Chrome(options=self.Options)
         self.driver.get('https://zefoy.com/')
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
@@ -47,7 +59,7 @@ class Program():
             self.driver.refresh()
             time.sleep(1.5)
             continue
-        time.sleep(5)
+        time.sleep(3)
         self.SelectType()
 
     def PassCaptcha(self):
@@ -68,21 +80,21 @@ class Program():
         
     def SelectType(self):
         self.driver.find_element(By.XPATH,Static.typeValues[TYPE]).click()
-        time.sleep(0.5)
+        time.sleep(0.3)
         self.GetViews()
 
     def GetViews(self):
-        time.sleep(1)
+        time.sleep(0.5)
         self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/input').send_keys(VIDEO)
         for _ in range(AMOUNT):
-            time.sleep(1)
+            time.sleep(0.5)
             self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/div/button').click()
-            time.sleep(5)
+            time.sleep(3)
             while True:
                 if not self.isReady():
-                    time.sleep(5)
-                else:
                     time.sleep(3)
+                else:
+                    time.sleep(1.5)
                     break
             time.sleep(2)
             self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/div/button').click()
@@ -91,10 +103,10 @@ class Program():
                 self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button').click()
             except:
                 self.driver.refresh()
-                time.sleep(3)
+                time.sleep(2)
                 self.SelectType()
     def isReady(self):
         return self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text.__contains__('READY') or len(self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text) <= 0
-
-if __name__ == "__main__":                
+if __name__ == "__main__":  
+    CheckVersion("1.1.0")              
     Program()
