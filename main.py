@@ -82,11 +82,17 @@ class Program():
                 if not self.isReady():
                     time.sleep(5)
                 else:
+                    time.sleep(3)
                     break
-            time.sleep(1.5)
+            time.sleep(2)
             self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/div/button').click()
             time.sleep(2)
-            self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button').click()
+            try:
+                self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button').click()
+            except:
+                self.driver.refresh()
+                time.sleep(3)
+                self.SelectType()
     def isReady(self):
         return self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text.__contains__('READY') or len(self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text) <= 0
 
