@@ -12,6 +12,7 @@ TikTok View Booster is a Python-based tool designed to increase the view count o
     - Auto Captcha Completer
 # Known Bugs
     - Headless mode doesn't work. (Working on it..)
+    - Sometimes it crashes and it says element not found.
 
 [<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
   
