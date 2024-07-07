@@ -2,7 +2,9 @@
 <h1 align="center">Tiktok-Booster</h1>
 
 <p align="center">
+    
 [<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
+
 </p><br/><br/>
 
 ## Features
