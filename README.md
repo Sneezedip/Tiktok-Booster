@@ -1,5 +1,6 @@
 <p align="center"><a href="https://github.com/Sneezedip/Tiktok-Booster"><img src="https://static.vecteezy.com/system/resources/previews/024/273/794/non_2x/tiktok-logo-transparent-free-png.png" alt="TTKVB" height="150"/></a></p>
 <h1 align="center">Tiktok-Booster</h1>
+
 ## Features
 
 - **Automated Views:** Automatically increases the view count of specified TikTok videos.
