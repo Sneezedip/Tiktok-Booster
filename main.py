@@ -1,4 +1,4 @@
-import time,configparser,os,sys,requests,zipfile,webbrowser
+import time,configparser,os,sys,requests,zipfile
 from Static.Static import Static
 try:
     from selenium import webdriver
@@ -6,11 +6,16 @@ try:
     import pytesseract
     from PIL import Image
     from fake_headers import Headers
+    from colorama import Fore,Style
 except:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
     print('Libraries installed. Restart the program!')
     sys.exit()
+
+def Credits():
+    print(f"{Style.BRIGHT}{Fore.BLUE}Provided to you by {Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
+    print(f"{Style.BRIGHT}{Fore.BLUE}Join Our Discord For More Tools! {Fore.GREEN}https://discord.gg/htbep2Fx{Style.RESET_ALL}")
 
 def Download(url, extract_to='.'):
     response = requests.get(url)
@@ -26,7 +31,8 @@ def CheckVersion(current_version):
         while True:
             u = input("NEW VERSION FOUND. Want to update? (y/n)").lower()
             if u == "y":
-                webbrowser.open("https://github.com/Sneezedip/Tiktok-Booster")
+                Download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main","./")
+                print("Updated. Check the new folder created.")
                 sys.exit()
             elif u == "n":
                 return
@@ -48,7 +54,7 @@ class Program():
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
         if config.getboolean('Settings','HEADLESS'): self.Options.add_argument("--headless")
-        print('Installing Extensions...')
+        print(f'{Style.BRIGHT}{Fore.BLUE}Installing Extensions...{Style.RESET_ALL}')
         self.Options.add_extension('Extensions/ub.crx')
         self.driver = webdriver.Chrome(options=self.Options)
         self.driver.get('https://zefoy.com/')
@@ -108,5 +114,6 @@ class Program():
     def isReady(self):
         return self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text.__contains__('READY') or len(self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text) <= 0
 if __name__ == "__main__":  
-    CheckVersion("1.1.0")              
+    CheckVersion("1.1.1")     
+    Credits()         
     Program()
