@@ -1,3 +1,9 @@
+# Version 1.1.2
+    - Added Style to every String
+    - Added more logs!
+    - If The program waits for too long, it will warn the user.
+    - Added "\r" end to every string to prevent printing flood.
+
 # Version 1.1.1
     - Added Auto Updater
     - Added Colors (colorama)
