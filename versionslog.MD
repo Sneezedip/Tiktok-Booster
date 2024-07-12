@@ -1,3 +1,8 @@
+# Version 1.1.1
+    - Added Auto Updater
+    - Added Colors (colorama)
+    - Added Credits
+
 # Version 1.1.0
     - HEADLESS now works!
     - Program +~122,7% faster (Removed unused delays)
