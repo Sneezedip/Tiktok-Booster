@@ -2,3 +2,4 @@ selenium
 pytesseract
 pillow
 fake_headers
+colorama
