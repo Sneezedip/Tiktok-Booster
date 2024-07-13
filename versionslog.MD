@@ -1,3 +1,7 @@
+# Version 1.1.3
+    - Started using WebDriverWait instead of time.sleep for better results.
+    - Added Current time for all logs.
+
 # Version 1.1.2
     - Added Style to every String
     - Added more logs!
