@@ -7,6 +7,9 @@ try:
     from PIL import Image
     from fake_headers import Headers
     from colorama import Fore,Style
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    from datetime import datetime
 except:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -25,6 +28,7 @@ SUCCESS = f"{Fore.GREEN}[SUCCESS] "
 INFO = f"{Fore.BLUE}[INFO] "
 WARNING = f"{Fore.RED}[WARNING] "
 
+SLEEP = 2
 def Credits():
     print(f"{INFO}{Fore.BLUE}Provided to you by {Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
     print(f"{INFO}{Fore.BLUE}Join Our Discord For More Tools! {Fore.GREEN}https://discord.gg/htbep2Fx{Style.RESET_ALL}")
@@ -41,10 +45,10 @@ def CheckVersion(current_version):
     response = requests.get("https://raw.githubusercontent.com/Sneezedip/Tiktok-Booster/main/VERSION")
     if response.text.strip() != current_version:
         while True:
-            u = input(f"{WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
+            u = input(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
             if u == "y":
                 Download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main","./")
-                print(INFO+"Updated. Check the new folder created.")
+                print(f"{datetime.now().strftime("%H:%M:%S")} {INFO}Updated. Check the new folder created.")
                 sys.exit()
             elif u == "n":
                 return
@@ -60,13 +64,13 @@ class Program():
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
         if config.getboolean('Settings','HEADLESS'): self.Options.add_argument("--headless")
-        print(f'\n{WAITING}{Fore.WHITE}Installing Extensions...{Style.RESET_ALL}',end="\r")
+        print(f'\n{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Installing Extensions...{Style.RESET_ALL}',end="\r")
         self.Options.add_extension('Extensions/ub.crx')
-        print(f"{SUCCESS}{Fore.WHITE}Extensions Installed Sucessfully!{Style.RESET_ALL}")
+        print(f"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}Extensions Installed Sucessfully!{Style.RESET_ALL}")
         self.driver = webdriver.Chrome(options=self.Options)
         self.driver.get('https://zefoy.com/')
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
-        self.driver.find_element(By.XPATH,'/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]').click()
+        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
         time.sleep(0.5)
         while not self.PassCaptcha():
             self.driver.refresh()
@@ -77,59 +81,58 @@ class Program():
 
     def PassCaptcha(self):
         with open('Captcha/captcha.png', 'wb') as file:
-            file.write(self.driver.find_element(By.XPATH,'/html/body/div[5]/div[2]/form/div/div/img').screenshot_as_png)
-        time.sleep(0.1)
-        self.driver.find_element(By.XPATH,'/html/body/div[5]/div[2]/form/div/div/div/input').send_keys(pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
-        print(f"{WAITING}{Fore.WHITE}Passing Captcha..{Style.RESET_ALL}",end="\r")
+            file.write(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[5]/div[2]/form/div/div/img'))).screenshot_as_png)
+        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
+        print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Passing Captcha..{Style.RESET_ALL}",end="\r")
         if self.PassedCaptcha():
-            print(F"{SUCCESS}{Fore.WHITE}Captcha Passed Successfully!{Style.RESET_ALL}")
+            print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}Captcha Passed Successfully!{Style.RESET_ALL}")
             return True
         return False
     def PassedCaptcha(self):
         try:
-            self.driver.find_element(By.ID,'errorcapthcaclose').click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.ID,'errorcapthcaclose'))).click()
             return False
         except:
             return True
         
     def SelectType(self):
-        self.driver.find_element(By.XPATH,Static.typeValues[TYPE]).click()
+        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.typeValues[TYPE]))).click()
         time.sleep(0.3)
         self.GetViews()
 
     def GetViews(self):
         time.sleep(0.5)
-        self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/input').send_keys(VIDEO)
+        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/input'))).send_keys(VIDEO)
         for _ in range(AMOUNT):
             time.sleep(0.5)
-            self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/div/button').click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
             time.sleep(3)
             waiting_timer = 0
             while True:
                 if not self.isReady():
-                    print(f"{WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}",end="\r")
+                    print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}",end="\r")
                     time.sleep(3)
                     waiting_timer += 1
                     if waiting_timer >= 50:
-                        print(f"{WARNING}Program is waiting for more than 3 minutes. Check Video Link!{Style.RESET_ALL}")
+                        print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 3 minutes. Check Video Link!{Style.RESET_ALL}")
                         sys.exit()
                 else:
                     time.sleep(1.5)
                     break
             waiting_timer = 0
             time.sleep(2)
-            self.driver.find_element(By.XPATH,'/html/body/div[10]/div/form/div/div/button').click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
             time.sleep(2)
             try:
-                self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button').click()
-                print(F"{SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
+                WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button'))).click()
+                print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
             except:
                 self.driver.refresh()
                 time.sleep(2)
                 self.SelectType()
     def isReady(self):
-        return self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text.__contains__('READY') or len(self.driver.find_element(By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]').text) <= 0
+         return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
 if __name__ == "__main__":  
-    CheckVersion("1.1.2")     
+    CheckVersion("1.1.3")     
     Credits()         
     Program()
