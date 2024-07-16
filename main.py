@@ -156,7 +156,7 @@ class Program():
     def _banner(self):
         print(f"{INFO}Video Views : {Fore.WHITE}{self.RefreshViews()}{Style.RESET_ALL}")
 if __name__ == "__main__":  
-    CheckVersion("1.2.0.1")     
+    CheckVersion("1.2.1")     
     Credits() 
     IsFirst()        
     Program()
