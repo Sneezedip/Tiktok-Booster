@@ -33,7 +33,7 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 1.2.0.1
+# Version 1.2.1
     - Minor Fix
 
 [<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
