@@ -1,3 +1,6 @@
+# Version 1.1.4
+    - Minor bug fixes.
+
 # Version 1.1.3
     - Started using WebDriverWait instead of time.sleep for better results.
     - Added Current time for all logs.

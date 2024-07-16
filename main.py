@@ -1,4 +1,4 @@
-import time,configparser,os,sys,requests,zipfile
+import time,configparser,os,sys,requests,zipfile,tempfile,webbrowser
 from Static.Static import Static
 try:
     from selenium import webdriver
@@ -29,9 +29,20 @@ INFO = f"{Fore.BLUE}[INFO] "
 WARNING = f"{Fore.RED}[WARNING] "
 
 SLEEP = 2
+def IsFirst():
+    file_path = os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt')
+    file_exists = os.path.isfile(file_path)
+    if file_exists:
+        return
+    else:
+        with open(os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt'),"w") as file:
+            file.write("Don't Worry, this isn't a virus, just a check to see if it's your first time. :)")
+            print(f"{INFO}First Time Detected. Welcome! (This won't appear anymore)")
+        webbrowser.open("https://discord.gg/nAa5PyxubF")
+
 def Credits():
     print(f"{INFO}{Fore.BLUE}Provided to you by {Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
-    print(f"{INFO}{Fore.BLUE}Join Our Discord For More Tools! {Fore.GREEN}https://discord.gg/htbep2Fx{Style.RESET_ALL}")
+    print(f"{INFO}{Fore.BLUE}Join Our Discord For More Tools! {Fore.GREEN}https://discord.gg/nAa5PyxubF{Style.RESET_ALL}")
 
 def Download(url, extract_to='.'):
     response = requests.get(url)
@@ -133,6 +144,7 @@ class Program():
     def isReady(self):
          return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
 if __name__ == "__main__":  
-    CheckVersion("1.1.3")     
-    Credits()         
+    CheckVersion("1.1.4")     
+    Credits() 
+    IsFirst()        
     Program()
