@@ -9,6 +9,29 @@ TikTok View Booster is a Python-based tool designed to increase the view count o
 - **CAPTCHA Bypass:** Utilizes Pillow and Tesseract OCR to accurately solve CAPTCHA challenges.
 - **Easy to Use:** Simple configuration and setup for quick deployment.
 
+## Usage
+
+To run the program, follow these steps:
+
+1. **Configure `config.cfg`:**
+   - Open the `config.cfg` file in a text editor of your choice.
+   - Adjust the settings as needed to suit your preferences and requirements.
+
+2. **Open Command Prompt in `tiktokbooster` Folder:**
+   - Navigate to the `tiktokbooster` folder.
+   - Open a command prompt (cmd) in this folder. You can do this by:
+     - Typing `cmd` in the address bar of the File Explorer and pressing Enter.
+     - Right-clicking inside the folder, selecting "Open in Terminal" or "Open Command Window Here".
+
+3. **Run the Program:**
+   - In the command prompt, execute the following command:
+     ```sh
+     python3 main.py
+     ```
+
+4. **Wait:**
+   - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
+
 # Version 1.1.4
     - Minor bug fixes.
 
