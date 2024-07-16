@@ -1,3 +1,9 @@
+# Version 1.2.0
+    - Updated waiting time.
+    - Now it prints the current amount of views.
+    - Added 'cls' (for linux and windows).
+    - Fixed SLEEP bug.
+
 # Version 1.1.4
     - Minor bug fixes.
 

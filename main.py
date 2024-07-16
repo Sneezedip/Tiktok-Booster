@@ -28,7 +28,7 @@ SUCCESS = f"{Fore.GREEN}[SUCCESS] "
 INFO = f"{Fore.BLUE}[INFO] "
 WARNING = f"{Fore.RED}[WARNING] "
 
-SLEEP = 2
+SLEEP = 4
 def IsFirst():
     file_path = os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt')
     file_exists = os.path.isfile(file_path)
@@ -71,6 +71,7 @@ if not os.path.exists('Tesseract'):
 
 class Program():
     def __init__(self):
+        self.VIDEOID = VIDEO.split("/")[5]
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
@@ -83,6 +84,9 @@ class Program():
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
         WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
         time.sleep(0.5)
+        
+        self._banner()
+
         while not self.PassCaptcha():
             self.driver.refresh()
             time.sleep(1.5)
@@ -115,6 +119,8 @@ class Program():
         time.sleep(0.5)
         WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/input'))).send_keys(VIDEO)
         for _ in range(AMOUNT):
+            os.system("cls") if os.name == 'nt' else os.system("clear")
+            self._banner()
             time.sleep(0.5)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
             time.sleep(3)
@@ -124,8 +130,8 @@ class Program():
                     print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}",end="\r")
                     time.sleep(3)
                     waiting_timer += 1
-                    if waiting_timer >= 50:
-                        print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 3 minutes. Check Video Link!{Style.RESET_ALL}")
+                    if waiting_timer >= 70:
+                        print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 5 minutes. Check Video Link!{Style.RESET_ALL}")
                         sys.exit()
                 else:
                     time.sleep(1.5)
@@ -143,8 +149,13 @@ class Program():
                 self.SelectType()
     def isReady(self):
          return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
+    def RefreshViews(self):
+        response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
+        return response['plays']
+    def _banner(self):
+        print(f"{INFO}Video Views : {Fore.WHITE}{self.RefreshViews()}{Style.RESET_ALL}")
 if __name__ == "__main__":  
-    CheckVersion("1.1.4")     
+    CheckVersion("1.2.0")     
     Credits() 
     IsFirst()        
     Program()

@@ -33,8 +33,11 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 1.1.4
-    - Minor bug fixes.
+# Version 1.2.0
+    - Updated waiting time.
+    - Now it prints the current amount of views.
+    - Added 'cls' (for linux and windows).
+    - Fixed SLEEP bug.
 
 [<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
   
