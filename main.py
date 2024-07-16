@@ -152,7 +152,10 @@ class Program():
          return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
     def RefreshViews(self):
         response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
-        return response['plays']
+        try:
+            return response['plays']
+        except :
+            return "Unknown"
     def _banner(self):
         print(f"{INFO}Video Views : {Fore.WHITE}{self.RefreshViews()}{Style.RESET_ALL}")
 if __name__ == "__main__":  
