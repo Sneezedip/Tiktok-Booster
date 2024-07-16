@@ -28,6 +28,7 @@ To run the program, follow these steps:
      ```sh
      python3 main.py
      ```
+   - (or you can use Visual Studio Code)
 
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
