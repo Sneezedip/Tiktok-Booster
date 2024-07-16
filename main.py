@@ -147,6 +147,7 @@ class Program():
                 self.driver.refresh()
                 time.sleep(2)
                 self.SelectType()
+            time.sleep(3)
     def isReady(self):
          return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
     def RefreshViews(self):
@@ -155,7 +156,7 @@ class Program():
     def _banner(self):
         print(f"{INFO}Video Views : {Fore.WHITE}{self.RefreshViews()}{Style.RESET_ALL}")
 if __name__ == "__main__":  
-    CheckVersion("1.2.0")     
+    CheckVersion("1.2.0.1")     
     Credits() 
     IsFirst()        
     Program()

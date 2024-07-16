@@ -1,3 +1,6 @@
+# Version 1.2.0.1
+    - Minor Fix
+
 # Version 1.2.0
     - Updated waiting time.
     - Now it prints the current amount of views.
