@@ -1,3 +1,9 @@
+# Version 1.3.0
+   - Added more Delay to prevent crashing.
+   - Added more exceptions to prevent crashing
+   - More Logs (when updating)
+   - Now program works with links starting with 'vm' (instead of 'www')
+
 # Version 1.2.1
     - Minor Fix
 

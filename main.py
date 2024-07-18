@@ -28,7 +28,7 @@ SUCCESS = f"{Fore.GREEN}[SUCCESS] "
 INFO = f"{Fore.BLUE}[INFO] "
 WARNING = f"{Fore.RED}[WARNING] "
 
-SLEEP = 4
+SLEEP = 15
 def IsFirst():
     file_path = os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt')
     file_exists = os.path.isfile(file_path)
@@ -58,6 +58,7 @@ def CheckVersion(current_version):
         while True:
             u = input(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
             if u == "y":
+                print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}Updating...")
                 Download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main","./")
                 print(f"{datetime.now().strftime("%H:%M:%S")} {INFO}Updated. Check the new folder created.")
                 sys.exit()
@@ -71,7 +72,7 @@ if not os.path.exists('Tesseract'):
 
 class Program():
     def __init__(self):
-        self.VIDEOID = VIDEO.split("/")[5]
+        self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
@@ -82,7 +83,10 @@ class Program():
         self.driver = webdriver.Chrome(options=self.Options)
         self.driver.get('https://zefoy.com/')
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
-        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
+        try:
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
+        except:
+            pass
         time.sleep(0.5)
         
         self._banner()
@@ -158,8 +162,19 @@ class Program():
             return "Unknown"
     def _banner(self):
         print(f"{INFO}Video Views : {Fore.WHITE}{self.RefreshViews()}{Style.RESET_ALL}")
+    def _checkVideo(self):
+        if VIDEO.split("/")[2].__contains__("vm"):
+            return "vm"
+        return "www"
+    def _getVMID(self):
+        response = requests.post("https://countik.com/api/video/exist",json={'url': f"{VIDEO}"}).json()
+        try:
+            return response['id']
+        except:
+            print(f"{WARNING}Unable to get Video ID{Style.RESET_ALL}")
+            return
 if __name__ == "__main__":  
-    CheckVersion("1.2.1")     
+    CheckVersion("1.3.0")     
     Credits() 
     IsFirst()        
     Program()

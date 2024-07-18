@@ -33,8 +33,11 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 1.2.1
-    - Minor Fix
+# Version 1.3.0
+   - Added more Delay to prevent crashing.
+   - Added more exceptions to prevent crashing
+   - More Logs (when updating)
+   - Now program works with links starting with 'vm' (instead of 'www')
 
 [<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
   
