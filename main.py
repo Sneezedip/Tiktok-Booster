@@ -81,6 +81,9 @@ class Program():
         self.Options.add_extension('Extensions/ub.crx')
         print(f"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}Extensions Installed Sucessfully!{Style.RESET_ALL}")
         self.driver = webdriver.Chrome(options=self.Options)
+
+        self._showMenu()
+
         self.driver.get('https://zefoy.com/')
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
         try:
@@ -89,7 +92,6 @@ class Program():
             pass
         time.sleep(0.5)
         
-        self._banner()
 
         while not self.PassCaptcha():
             self.driver.refresh()
@@ -122,9 +124,9 @@ class Program():
     def GetViews(self):
         time.sleep(0.5)
         WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/input'))).send_keys(VIDEO)
-        for _ in range(AMOUNT):
+        for i in range(AMOUNT):
             os.system("cls") if os.name == 'nt' else os.system("clear")
-            self._banner()
+            self._banner(i)
             time.sleep(0.5)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
             time.sleep(3)
@@ -154,14 +156,45 @@ class Program():
             time.sleep(3)
     def isReady(self):
          return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
-    def RefreshViews(self):
-        response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
+    def _showMenu(self):
+        os.system("cls") if os.name == 'nt' else os.system("clear")
+        print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Gathering Video Info...",end="\r")
+        def _gather(type):
+            try:
+                if type == 'views':
+                    return int(self._getvideoInfo(Views=True))
+                elif type == 'likes':
+                    return int(self._getvideoInfo(Likes=True))
+                elif type == 'shares':
+                    return int(self._getvideoInfo(Shares=True))
+                elif type == 'creator':
+                    return self._getvideoInfo(Creator=True)
+            except:
+                return 'Unable to Gather'
+        creator = _gather('creator')
+        views = _gather('views')
+        likes = _gather('likes')
+        shares = _gather('shares')
         try:
-            return response['plays']
-        except :
-            return "Unknown"
-    def _banner(self):
-        print(f"{INFO}Video Views : {Fore.WHITE}{self.RefreshViews()}{Style.RESET_ALL}")
+            viewsMulti = int(views) + (1000*AMOUNT)
+        except: viewsMulti = '----'
+        os.system("cls")
+        print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {round(AMOUNT * 2.5 / 60,2)} hours){Fore.WHITE}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares}
+                {Style.RESET_ALL}""")
+        while True:
+            us = input(f"{WAITING}Want to start? (y/n)\n-> {Style.RESET_ALL}").lower()
+            if us == 'y':
+                return
+            elif us == 'n':
+                sys.exit()
+        
+    def _banner(self,I):
+        views = self._getvideoInfo(Views = True)
+        print(f"{INFO}{Fore.WHITE}Video Views : {Fore.WHITE}{views} {Style.BRIGHT}{Fore.MAGENTA}(Est. Remaining : {round((AMOUNT-I) * 2.5 / 60,2)} Hours{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
             return "vm"
@@ -173,8 +206,23 @@ class Program():
         except:
             print(f"{WARNING}Unable to get Video ID{Style.RESET_ALL}")
             return
-if __name__ == "__main__":  
-    CheckVersion("1.3.0")     
+    def _getvideoInfo(self,Creator = False,Views = False,Likes = False,Shares = False):
+        retry = 0
+        while True:
+            if retry > 5:
+                break
+            response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
+            try:
+                if Creator : return response['creator']
+                elif Views : return response['plays']
+                elif Likes : return response['likes']
+                elif Shares : return response['shares']
+            except :
+                retry += 1
+        return "Unable to gather."
+if __name__ == "__main__": 
+    os.system("cls") if os.name == 'nt' else os.system("clear") 
+    CheckVersion("1.4.0")     
     Credits() 
     IsFirst()        
     Program()
