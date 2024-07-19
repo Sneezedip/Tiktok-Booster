@@ -41,12 +41,19 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 1.4.1
-      - Prettier hour format (HH:MM:SS)
-      - Fixed Estimated time not working.
+# Version 1.4.2
+      - Added Percentage to keep track of progress.
+      - Added Amount of views Gained.
+      - Fixed some prints.
 
-[<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
-  
+<div align="center">
+
+[![Paypal](https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal)](https://paypal.me/sneezedip)
+
+[![Discord](https://img.shields.io/discord/997079228510117908?label=discord&color=9089DA&logo=discord&style=for-the-badge)](https://discord.gg/nAa5PyxubF)
+
+</div>
+
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 
 **Please note: This project is not intended for commercial use. It is provided for educational and personal use only.**
