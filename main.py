@@ -127,7 +127,6 @@ class Program():
         WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/input'))).send_keys(VIDEO)
         for _ in range(AMOUNT):
             os.system("cls") if os.name == 'nt' else os.system("clear")
-            self.INDEX += 1
             self._banner(self.INDEX)
             time.sleep(0.5)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
@@ -155,6 +154,7 @@ class Program():
                 self.driver.refresh()
                 time.sleep(2)
                 self.SelectType()
+            self.INDEX += 1
             time.sleep(3)
     def isReady(self):
          return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
