@@ -1,14 +1,19 @@
+# Version 1.4.1
+    - Prettier hour format (HH:MM:SS)
+    - Fixed Estimated time not working.
+
+
 # Version 1.4.0
     - Created a menu that displays Video Creator,Views,Likes and Shares with confirmation that asks the user to start.
-       - Menu also displays the amount of views it'll end with after program is done.
-       - Menu will also display the Est. hours that it will take to finish.
+        - Menu also displays the amount of views it'll end with after program is done.
+        - Menu will also display the Est. hours that it will take to finish.
     - Now it always displays the estimated time remaining.
 
 # Version 1.3.0
-    - Added more Delay to prevent crashing.
-    - Added more exceptions to prevent crashing
-    - More Logs (when updating)
-    - Now program works with links starting with 'vm' (instead of 'www')
+   - Added more Delay to prevent crashing.
+   - Added more exceptions to prevent crashing
+   - More Logs (when updating)
+   - Now program works with links starting with 'vm' (instead of 'www')
 
 # Version 1.2.1
     - Minor Fix

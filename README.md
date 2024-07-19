@@ -39,11 +39,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 1.4.0
-   - Created a menu that displays Video Creator,Views,Likes and Shares with confirmation that asks the user to start.
-      - Menu also displays the amount of views it'll end with after program is done.
-      - Menu will also display the Est. hours that it will take to finish.
-   - Now it always displays the estimated time remaining.
+# Version 1.4.1
+      - Prettier hour format (HH:MM:SS)
+      - Fixed Estimated time not working.
 
 [<img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal">](https://paypal.me/sneezedip)
   

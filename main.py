@@ -9,7 +9,7 @@ try:
     from colorama import Fore,Style
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC
-    from datetime import datetime
+    from datetime import datetime,timedelta
 except:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -72,6 +72,7 @@ if not os.path.exists('Tesseract'):
 
 class Program():
     def __init__(self):
+        self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
@@ -124,9 +125,10 @@ class Program():
     def GetViews(self):
         time.sleep(0.5)
         WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/input'))).send_keys(VIDEO)
-        for i in range(AMOUNT):
+        for _ in range(AMOUNT):
             os.system("cls") if os.name == 'nt' else os.system("clear")
-            self._banner(i)
+            self.INDEX += 1
+            self._banner(self.INDEX)
             time.sleep(0.5)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
             time.sleep(3)
@@ -181,7 +183,7 @@ class Program():
         os.system("cls")
         print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
-    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {round(AMOUNT * 2.5 / 60,2)} hours){Fore.WHITE}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2.5 / 60,2))} hours){Fore.WHITE}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares}
                 {Style.RESET_ALL}""")
@@ -194,7 +196,7 @@ class Program():
         
     def _banner(self,I):
         views = self._getvideoInfo(Views = True)
-        print(f"{INFO}{Fore.WHITE}Video Views : {Fore.WHITE}{views} {Style.BRIGHT}{Fore.MAGENTA}(Est. Remaining : {round((AMOUNT-I) * 2.5 / 60,2)} Hours{Style.RESET_ALL})")
+        print(f"{INFO}{Fore.WHITE}Video Views : {Fore.WHITE}{views} {Style.BRIGHT}{Fore.MAGENTA}(Est. Remaining : {self._convertHours(round((AMOUNT-I) * 2.5 / 60,2))} Hours{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
             return "vm"
@@ -220,9 +222,18 @@ class Program():
             except :
                 retry += 1
         return "Unable to gather."
+    def _convertHours(self,hours):
+        td = timedelta(seconds=int(hours * 3600))
+
+        hours, remainder = divmod(td.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        
+        hhmmss = f"{hours:02}:{minutes:02}:{seconds:02}"
+        
+        return hhmmss
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("1.4.0")     
+    CheckVersion("1.4.1")     
     Credits() 
     IsFirst()        
     Program()
