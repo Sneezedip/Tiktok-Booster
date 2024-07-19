@@ -183,7 +183,7 @@ class Program():
         os.system("cls")
         print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
-    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2.5 / 60,2))} hours){Fore.WHITE}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))} hours){Fore.WHITE}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares}
                 {Style.RESET_ALL}""")
@@ -196,7 +196,7 @@ class Program():
         
     def _banner(self,I):
         views = self._getvideoInfo(Views = True)
-        print(f"{INFO}{Fore.WHITE}Video Views : {Fore.WHITE}{views} {Style.BRIGHT}{Fore.MAGENTA}(Est. Remaining : {self._convertHours(round((AMOUNT-I) * 2.5 / 60,2))} Hours{Style.RESET_ALL})")
+        print(f"{INFO}{Fore.WHITE}Video Views : {Fore.WHITE}{views} {Style.BRIGHT}{Fore.MAGENTA}(Est. Remaining : {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Hours{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
             return "vm"
