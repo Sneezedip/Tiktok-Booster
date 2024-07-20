@@ -1,3 +1,7 @@
+# Version 1.4.2
+      - Added Percentage to keep track of progress.
+      - Added Amount of views Gained.
+
 # Version 1.4.1
     - Prettier hour format (HH:MM:SS)
     - Fixed Estimated time not working.

@@ -74,6 +74,7 @@ class Program():
     def __init__(self):
         self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
+        self.INITIALVIEWS = self._getvideoInfo(Views=True)
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
@@ -183,7 +184,7 @@ class Program():
         os.system("cls")
         print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
-    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))} hours){Fore.WHITE}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares}
                 {Style.RESET_ALL}""")
@@ -196,7 +197,7 @@ class Program():
         
     def _banner(self,I):
         views = self._getvideoInfo(Views = True)
-        print(f"{INFO}{Fore.WHITE}Video Views : {Fore.WHITE}{views} {Style.BRIGHT}{Fore.MAGENTA}(Est. Remaining : {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Hours{Style.RESET_ALL})")
+        print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
             return "vm"
@@ -233,7 +234,7 @@ class Program():
         return hhmmss
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("1.4.1")     
+    CheckVersion("1.4.2")     
     Credits() 
     IsFirst()        
     Program()
