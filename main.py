@@ -10,6 +10,7 @@ try:
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC
     from datetime import datetime,timedelta
+    from discordwebhook import Discord
 except:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -22,6 +23,9 @@ config.read('config.cfg')
 TYPE = config.get('Settings','TYPE')
 VIDEO = config.get('Settings','VIDEO_URL')
 AMOUNT = config.getint('Settings','AMOUNT')
+WEBHOOK = config.get('Settings','WEBHOOK')
+EACH_VIEWS = config.getint('Settings','EACH_VIEWS')
+MESSAGE = config.get('Settings','MESSAGE')
 
 WAITING= f"{Fore.YELLOW}[WAITING] "
 SUCCESS = f"{Fore.GREEN}[SUCCESS] "
@@ -72,6 +76,15 @@ if not os.path.exists('Tesseract'):
 
 class Program():
     def __init__(self):
+        self.COUNTER2 = 0
+        self.WEBHOOK = WEBHOOK
+        self.EACH_VIEWS = EACH_VIEWS
+        try:
+            self.MESSAGE = MESSAGE.format(self.EACH_VIEWS)
+        except:
+            self.MESSAGE = MESSAGE
+        self.Webhook = Discord(url=self.WEBHOOK)
+        self._menu()
         self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
         self.INITIALVIEWS = self._getvideoInfo(Views=True)
@@ -151,6 +164,10 @@ class Program():
             try:
                 WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button'))).click()
                 print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
+                self.COUNTER2 += 1000
+                if self.COUNTER2 >= self.EACH_VIEWS:
+                    self.Webhook.post(content=self.MESSAGE)
+                    self.COUNTER2 = 0
             except:
                 self.driver.refresh()
                 time.sleep(2)
@@ -232,9 +249,70 @@ class Program():
         hhmmss = f"{hours:02}:{minutes:02}:{seconds:02}"
         
         return hhmmss
+    def _menu(self):
+        while True:
+            try:
+                msg = self.MESSAGE.format(self.EACH_VIEWS)
+            except:
+                msg = self.MESSAGE
+            os.system("cls") if os.name == 'nt' else os.system("clear") 
+            print(f"""
+            {Fore.BLUE}Program Configuration (Select an Option){Style.RESET_ALL}
+
+            {Fore.GREEN}[1] {Fore.BLACK}-{Fore.MAGENTA} Webhook [{Fore.RESET}{self.WEBHOOK}{Fore.MAGENTA}{Fore.RESET}]
+            {Fore.GREEN}[2] {Fore.BLACK}-{Fore.MAGENTA} Test Webhook
+            {Fore.GREEN}[3] {Fore.BLACK}-{Fore.MAGENTA} Warn Each {Fore.RESET}{self.EACH_VIEWS}{Fore.MAGENTA} Views
+            {Fore.GREEN}[4] {Fore.BLACK}-{Fore.MAGENTA} Message [{Fore.RESET}{msg}{Fore.MAGENTA}]{Fore.RESET}
+
+            {Fore.GREEN}[5] {Fore.BLACK}-{Fore.LIGHTYELLOW_EX} Save Current Config{Fore.RESET}
+
+            {Fore.GREEN}[99] {Fore.BLACK}-{Fore.LIGHTYELLOW_EX} Start!{Fore.RESET}
+
+            """)
+            
+            try:
+                u = int(input("-> "))
+
+                if (u >= 1 and u <= 5) or (u == 99):
+                    if u == 1:
+                        self.WEBHOOK = input("Insert new -> ")
+                        self.Webhook = Discord(url=self.WEBHOOK)
+                    if u == 2: 
+                        try:
+                            self.Webhook.post(content="**Test Message To Webhook From TikTok Booster**")
+                            print(Fore.GREEN+"Valid!")
+                        except:
+                            print(Fore.RED+"Invalid Webhook!"+Style.RESET_ALL)
+                            time.sleep(0.5)
+                        time.sleep(1)
+                    if u == 3: 
+                        try: self.EACH_VIEWS = int(input("Insert new -> "))
+                        except: pass
+                    if u == 4: 
+                        self.MESSAGE = input("Insert new -> ")
+                        try:
+                            msg = self.MESSAGE.format(self.EACH_VIEWS)
+                        except:
+                            msg = self.MESSAGE
+                    if u == 5:
+                        try:
+                            config.set("Settings","WEBHOOK",str(self.WEBHOOK))
+                            config.set("Settings","EACH_VIEWS",str(self.EACH_VIEWS))
+                            config.set("Settings","MESSAGE",str(self.MESSAGE))
+                            with open("config.cfg", "w") as configfile:
+                                config.write(configfile)
+                            print("Saved!")
+                            time.sleep(1)
+                        except Exception as e:
+                            print(e)
+                            input()
+                    if u == 99: break
+            except:
+                pass
+
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("1.4.2")     
+    CheckVersion("2.0.0")     
     Credits() 
     IsFirst()        
     Program()

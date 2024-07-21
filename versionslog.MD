@@ -1,3 +1,7 @@
+# Version 2.0.0
+      Now you can add a Webhook and configure how much views it takes to warn you about it!
+      Created a mini menu to configure the webhook.
+
 # Version 1.4.2
       - Added Percentage to keep track of progress.
       - Added Amount of views Gained.

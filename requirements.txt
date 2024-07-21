@@ -3,3 +3,4 @@ pytesseract
 pillow
 fake_headers
 colorama
+discordwebhook
