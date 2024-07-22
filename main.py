@@ -6,6 +6,7 @@ try:
     import pytesseract
     from PIL import Image
     from fake_headers import Headers
+    import re
     from colorama import Fore,Style
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC
@@ -22,6 +23,8 @@ config.read('config.cfg')
 
 TYPE = config.get('Settings','TYPE')
 VIDEO = config.get('Settings','VIDEO_URL')
+if re.match(r'^https://tiktok\.com/', VIDEO):
+    VIDEO = VIDEO.replace('https://tiktok.com/', 'https://www.tiktok.com/')
 AMOUNT = config.getint('Settings','AMOUNT')
 WEBHOOK = config.get('Settings','WEBHOOK')
 EACH_VIEWS = config.getint('Settings','EACH_VIEWS')
@@ -145,6 +148,15 @@ class Program():
             time.sleep(0.5)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
             time.sleep(3)
+            try:
+                element = WebDriverWait(self.driver, SLEEP).until(
+                   EC.presence_of_element_located((By.XPATH, '/html/body/div[10]/div/div/span'))
+                )
+                text = element.text
+                if text:
+                  print(f"{Fore.RED}[Error] {Style.RESET_ALL}{text}")
+            except:
+               pass
             waiting_timer = 0
             while True:
                 if not self.isReady():
