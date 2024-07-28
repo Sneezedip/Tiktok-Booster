@@ -1,6 +1,7 @@
-import time,configparser,os,sys,requests,zipfile,tempfile,webbrowser
+import time,configparser,os,sys,zipfile,tempfile,webbrowser
 from Static.Static import Static
 try:
+    import requests
     from selenium import webdriver
     from selenium.webdriver.common.by import By
     import pytesseract
@@ -65,9 +66,9 @@ def CheckVersion(current_version):
         while True:
             u = input(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
             if u == "y":
-                print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}Updating...")
+                print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}Updating...{Style.RESET_ALL}")
                 Download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main","./")
-                print(f"{datetime.now().strftime("%H:%M:%S")} {INFO}Updated. Check the new folder created.")
+                print(f"{datetime.now().strftime("%H:%M:%S")} {INFO}Updated. Check the new folder created.{Style.RESET_ALL}")
                 sys.exit()
             elif u == "n":
                 return
@@ -91,6 +92,8 @@ class Program():
         self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
         self.INITIALVIEWS = self._getvideoInfo(Views=True)
+        if self.INITIALVIEWS == 'Unable to gather.':
+            self.INITIALVIEWS = 0
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
@@ -324,7 +327,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.0.1")     
+    CheckVersion("2.0.2")     
     Credits() 
     IsFirst()        
     Program()

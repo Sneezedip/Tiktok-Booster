@@ -1,3 +1,8 @@
+# Version 2.0.2
+      - Fixed Colors.
+      - Fixed import errors.
+      - Fixed Initial Views Error.
+
 # Version 2.0.0
       Now you can add a Webhook and configure how much views it takes to warn you about it!
       Created a mini menu to configure the webhook.
