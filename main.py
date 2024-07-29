@@ -246,7 +246,11 @@ class Program():
         while True:
             if retry > 5:
                 break
-            response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
+            try:
+                response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
+            except:
+                retry += 1
+                continue
             try:
                 if Creator : return response['creator']
                 elif Views : return response['plays']
@@ -327,7 +331,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.0.2")     
+    CheckVersion("2.0.3")     
     Credits() 
     IsFirst()        
     Program()

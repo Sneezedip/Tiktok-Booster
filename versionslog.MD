@@ -1,3 +1,7 @@
+# Version 2.0.3
+      - Added Shares option in config.cfg
+      - Bug fixes.
+
 # Version 2.0.2
       - Fixed Colors.
       - Fixed import errors.

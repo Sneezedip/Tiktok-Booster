@@ -49,10 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.0.2
-      - Fixed Colors.
-      - Fixed import errors.
-      - Fixed Initial Views Error.
+# Version 2.0.3
+      - Added Shares option in config.cfg
+      - Bug fixes.
 
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 
