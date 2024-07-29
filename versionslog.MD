@@ -1,3 +1,6 @@
+# Version 2.1.1
+      - Added Hearts!
+
 # Version 2.1.0
       - Fixed Shares not working properly.
       - Added Favorites.

@@ -95,6 +95,8 @@ class Program():
             self.INITIALVIEWS = self._getvideoInfo(Views=True)
         elif TYPE == 'shares':
             self.INITIALVIEWS = self._getvideoInfo(Shares=True)
+        elif TYPE == 'hearts':
+            self.INITIALVIEWS = self._getvideoInfo(Likes=True)
         elif TYPE == 'favorites':
             self.INITIALVIEWS = '0'
         if self.INITIALVIEWS == 'Unable to gather.':
@@ -171,9 +173,14 @@ class Program():
                     print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}",end="\r")
                     time.sleep(3)
                     waiting_timer += 1
-                    if waiting_timer >= 70:
-                        print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 5 minutes. Check Video Link!{Style.RESET_ALL}")
-                        sys.exit()
+                    if TYPE != 'hearts':
+                        if waiting_timer >= 70:
+                            print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 5 minutes. Check Video Link!{Style.RESET_ALL}")
+                            sys.exit()
+                    elif TYPE == 'hearts':
+                       if waiting_timer >= 700:
+                            print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 35 minutes. Check Video Link!{Style.RESET_ALL}")
+                            sys.exit() 
                 else:
                     time.sleep(1.5)
                     break
@@ -186,9 +193,11 @@ class Program():
                 if TYPE == 'views':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
                 if TYPE == 'shares':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+50 Shares Added Successfully!{Style.RESET_ALL}")
                 if TYPE == 'favorites':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+100 Favorites Added Successfully!{Style.RESET_ALL}")
+                if TYPE == 'hearts':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+10 Hearts Added Successfully!{Style.RESET_ALL}")
                 if TYPE == 'views': self.COUNTER2 += 1000
                 if TYPE == 'shares': self.COUNTER2 += 50
                 if TYPE == 'favorites': self.COUNTER2 += 100
+                if TYPE == 'hearts' : self.COUNTER2 += 10
                 if self.COUNTER2 >= self.EACH_VIEWS:
                     self.Webhook.post(content=self.MESSAGE)
                     self.COUNTER2 = 0
@@ -228,14 +237,18 @@ class Program():
         try:
             favoritesMulti = 0 + (100*AMOUNT)
         except: favoritesMulti = '----'
+        try:
+            heartsMulti = int(likes) + (10*AMOUNT)
+        except: heartsMulti = '----'
         os.system("cls")
         views_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE} "
         shares_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{sharesMulti} shares) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE} "
         favorites_extra = f"(I can't Gather Favorites but you'll get + {Style.BRIGHT}{Fore.GREEN}{favoritesMulti} Favorites) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE} "
+        hearts_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{heartsMulti} hearts) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 14 / 60,2))}){Fore.WHITE} "
         print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL} {views_extra if TYPE == 'views' else ''}
-    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}   {hearts_extra if TYPE == 'hearts' else ''}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares} {shares_extra if TYPE == 'shares' else ''}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Favorites : {Style.RESET_ALL}{Fore.WHITE}--- {favorites_extra if TYPE == 'favorites' else ''}
                 {Style.RESET_ALL}""")
@@ -253,6 +266,8 @@ class Program():
         if TYPE == 'shares' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'favorites' : favorites = 0
         if TYPE == 'favorites' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.COUNTER2}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
+        if TYPE == 'hearts' : hearts = 0
+        if TYPE == 'hearts' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
             return "vm"
