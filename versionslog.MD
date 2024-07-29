@@ -1,3 +1,8 @@
+# Version 2.1.0
+      - Fixed Shares not working properly.
+      - Added Favorites.
+      - Remastered menu to include shares and favorites.
+
 # Version 2.0.3
       - Added Shares option in config.cfg
       - Bug fixes.

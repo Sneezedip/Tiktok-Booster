@@ -49,9 +49,10 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.0.3
-      - Added Shares option in config.cfg
-      - Bug fixes.
+# Version 2.1.0
+      - Fixed Shares not working properly.
+      - Added Favorites.
+      - Remastered menu to include shares and favorites.
 
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 

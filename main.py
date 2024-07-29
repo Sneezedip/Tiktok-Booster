@@ -91,7 +91,12 @@ class Program():
         self._menu()
         self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
-        self.INITIALVIEWS = self._getvideoInfo(Views=True)
+        if TYPE == 'views':
+            self.INITIALVIEWS = self._getvideoInfo(Views=True)
+        elif TYPE == 'shares':
+            self.INITIALVIEWS = self._getvideoInfo(Shares=True)
+        elif TYPE == 'favorites':
+            self.INITIALVIEWS = '0'
         if self.INITIALVIEWS == 'Unable to gather.':
             self.INITIALVIEWS = 0
         self.Options = webdriver.ChromeOptions()
@@ -144,16 +149,16 @@ class Program():
 
     def GetViews(self):
         time.sleep(0.5)
-        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/input'))).send_keys(VIDEO)
+        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.firstStep[TYPE]))).send_keys(VIDEO)
         for _ in range(AMOUNT):
             os.system("cls") if os.name == 'nt' else os.system("clear")
             self._banner(self.INDEX)
             time.sleep(0.5)
-            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.secondStep[TYPE]))).click()
             time.sleep(3)
             try:
                 element = WebDriverWait(self.driver, SLEEP).until(
-                   EC.presence_of_element_located((By.XPATH, '/html/body/div[10]/div/div/span'))
+                   EC.presence_of_element_located((By.XPATH, Static.thirdStep[TYPE]))
                 )
                 text = element.text
                 if text:
@@ -174,12 +179,16 @@ class Program():
                     break
             waiting_timer = 0
             time.sleep(2)
-            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[10]/div/form/div/div/button'))).click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.fourthStep[TYPE]))).click()
             time.sleep(2)
             try:
-                WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/div[1]/div/form/button'))).click()
-                print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
-                self.COUNTER2 += 1000
+                WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.finalButton[TYPE]))).click()
+                if TYPE == 'views':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
+                if TYPE == 'shares':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+50 Shares Added Successfully!{Style.RESET_ALL}")
+                if TYPE == 'favorites':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+100 Favorites Added Successfully!{Style.RESET_ALL}")
+                if TYPE == 'views': self.COUNTER2 += 1000
+                if TYPE == 'shares': self.COUNTER2 += 50
+                if TYPE == 'favorites': self.COUNTER2 += 100
                 if self.COUNTER2 >= self.EACH_VIEWS:
                     self.Webhook.post(content=self.MESSAGE)
                     self.COUNTER2 = 0
@@ -190,7 +199,7 @@ class Program():
             self.INDEX += 1
             time.sleep(3)
     def isReady(self):
-         return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'//*[@id="c2VuZC9mb2xeb3dlcnNfdGlrdG9V"]/span[1]'))).text) <= 0
+         return WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.readyValues[TYPE]))).text.__contains__('READY') or len(WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.readyValues[TYPE]))).text) <= 0
     def _showMenu(self):
         os.system("cls") if os.name == 'nt' else os.system("clear")
         print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Gathering Video Info...",end="\r")
@@ -213,12 +222,22 @@ class Program():
         try:
             viewsMulti = int(views) + (1000*AMOUNT)
         except: viewsMulti = '----'
+        try:
+            sharesMulti = int(shares) + (50*AMOUNT)
+        except: sharesMulti = '----'
+        try:
+            favoritesMulti = 0 + (100*AMOUNT)
+        except: favoritesMulti = '----'
         os.system("cls")
+        views_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE} "
+        shares_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{sharesMulti} shares) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE} "
+        favorites_extra = f"(I can't Gather Favorites but you'll get + {Style.BRIGHT}{Fore.GREEN}{favoritesMulti} Favorites) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE} "
         print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
-    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL}(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{viewsMulti} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convertHours(round(AMOUNT * 2 / 60,2))}){Fore.WHITE}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL} {views_extra if TYPE == 'views' else ''}
     {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes}
-    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares} {shares_extra if TYPE == 'shares' else ''}
+    {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Favorites : {Style.RESET_ALL}{Fore.WHITE}--- {favorites_extra if TYPE == 'favorites' else ''}
                 {Style.RESET_ALL}""")
         while True:
             us = input(f"{WAITING}Want to start? (y/n)\n-> {Style.RESET_ALL}").lower()
@@ -228,8 +247,12 @@ class Program():
                 sys.exit()
         
     def _banner(self,I):
-        views = self._getvideoInfo(Views = True)
-        print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
+        if TYPE == 'views' : views = self._getvideoInfo(Views = True)
+        if TYPE == 'views' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
+        if TYPE == 'shares' : shares = self._getvideoInfo(Shares = True)
+        if TYPE == 'shares' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
+        if TYPE == 'favorites' : favorites = 0
+        if TYPE == 'favorites' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.COUNTER2}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
             return "vm"
@@ -280,7 +303,7 @@ class Program():
 
             {Fore.GREEN}[1] {Fore.BLACK}-{Fore.MAGENTA} Webhook [{Fore.RESET}{self.WEBHOOK}{Fore.MAGENTA}{Fore.RESET}]
             {Fore.GREEN}[2] {Fore.BLACK}-{Fore.MAGENTA} Test Webhook
-            {Fore.GREEN}[3] {Fore.BLACK}-{Fore.MAGENTA} Warn Each {Fore.RESET}{self.EACH_VIEWS}{Fore.MAGENTA} Views
+            {Fore.GREEN}[3] {Fore.BLACK}-{Fore.MAGENTA} Warn Each {Fore.RESET}{self.EACH_VIEWS}{Fore.MAGENTA} {TYPE}
             {Fore.GREEN}[4] {Fore.BLACK}-{Fore.MAGENTA} Message [{Fore.RESET}{msg}{Fore.MAGENTA}]{Fore.RESET}
 
             {Fore.GREEN}[5] {Fore.BLACK}-{Fore.LIGHTYELLOW_EX} Save Current Config{Fore.RESET}
@@ -331,7 +354,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.0.3")     
+    CheckVersion("2.1.0")     
     Credits() 
     IsFirst()        
     Program()
