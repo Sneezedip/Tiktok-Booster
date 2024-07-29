@@ -266,7 +266,7 @@ class Program():
         if TYPE == 'shares' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'favorites' : favorites = 0
         if TYPE == 'favorites' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.COUNTER2}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
-        if TYPE == 'hearts' : hearts = 0
+        if TYPE == 'hearts' : hearts = self._getvideoInfo(Likes = True)
         if TYPE == 'hearts' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
