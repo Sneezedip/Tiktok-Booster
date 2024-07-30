@@ -1,3 +1,6 @@
+# Version 2.1.1.1
+      - Hotfix for malfunction of Countik API
+
 # Version 2.1.1
       - Added Hearts!
 

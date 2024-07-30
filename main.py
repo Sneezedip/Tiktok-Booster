@@ -99,7 +99,7 @@ class Program():
             self.INITIALVIEWS = self._getvideoInfo(Likes=True)
         elif TYPE == 'favorites':
             self.INITIALVIEWS = '0'
-        if self.INITIALVIEWS == 'Unable to gather.':
+        if self.INITIALVIEWS.lower().__contains__('unable'):
             self.INITIALVIEWS = 0
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
@@ -145,7 +145,11 @@ class Program():
             return True
         
     def SelectType(self):
-        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.typeValues[TYPE]))).click()
+        try:
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.typeValues[TYPE]))).click()
+        except:
+            print(f"{WARNING}Unable to find the button for {TYPE}.. Retrying..")
+            self.SelectType()    
         time.sleep(0.3)
         self.GetViews()
 
@@ -282,7 +286,7 @@ class Program():
     def _getvideoInfo(self,Creator = False,Views = False,Likes = False,Shares = False):
         retry = 0
         while True:
-            if retry > 5:
+            if retry > 7:
                 break
             try:
                 response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
@@ -369,7 +373,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.1.1")     
+    CheckVersion("2.1.1.1")     
     Credits() 
     IsFirst()        
     Program()
