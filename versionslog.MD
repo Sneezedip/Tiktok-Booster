@@ -1,3 +1,6 @@
+# Version 2.1.1.2
+      - Hotfix For Integers.
+
 # Version 2.1.1.1
       - Hotfix for malfunction of Countik API
 

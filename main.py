@@ -99,8 +99,11 @@ class Program():
             self.INITIALVIEWS = self._getvideoInfo(Likes=True)
         elif TYPE == 'favorites':
             self.INITIALVIEWS = '0'
-        if self.INITIALVIEWS.lower().__contains__('unable'):
-            self.INITIALVIEWS = 0
+        try:
+            if self.INITIALVIEWS.lower().__contains__('unable'):
+                self.INITIALVIEWS = 0
+        except:
+            pass
         self.Options = webdriver.ChromeOptions()
         for option in Static.ChromeOptions:
             self.Options.add_argument(option)
@@ -227,7 +230,7 @@ class Program():
                 elif type == 'creator':
                     return self._getvideoInfo(Creator=True)
             except:
-                return 'Unable to Gather'
+                return 0
         creator = _gather('creator')
         views = _gather('views')
         likes = _gather('likes')
@@ -373,7 +376,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.1.1.1")     
+    CheckVersion("2.1.1.2")     
     Credits() 
     IsFirst()        
     Program()
