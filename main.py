@@ -13,6 +13,8 @@ try:
     from selenium.webdriver.support import expected_conditions as EC
     from datetime import datetime,timedelta
     from discordwebhook import Discord
+    from Modules.VideoInfo import TikTokVideoInfo
+    
 except:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -52,6 +54,21 @@ def Credits():
     print(f"{INFO}{Fore.BLUE}Provided to you by {Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
     print(f"{INFO}{Fore.BLUE}Join Our Discord For More Tools! {Fore.GREEN}https://discord.gg/nAa5PyxubF{Style.RESET_ALL}")
 
+def parse_cooldown(text):
+    minutes = 0
+    seconds = 0
+    
+    minute_match = re.search(r'(\d+)\s*minute', text)
+    if minute_match:
+        minutes = int(minute_match.group(1))
+    
+    second_match = re.search(r'(\d+)\s*second', text)
+    if second_match:
+        seconds = int(second_match.group(1))
+    
+    total_seconds = minutes * 60 + seconds
+    return total_seconds
+    
 def Download(url, extract_to='.'):
     response = requests.get(url)
     zip_path = os.path.join(extract_to, "downloaded_file.zip")
@@ -80,6 +97,7 @@ if not os.path.exists('Tesseract'):
 
 class Program():
     def __init__(self):
+        self.tiktok_info = TikTokVideoInfo(VIDEO)
         self.COUNTER2 = 0
         self.WEBHOOK = WEBHOOK
         self.EACH_VIEWS = EACH_VIEWS
@@ -92,11 +110,11 @@ class Program():
         self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
         if TYPE == 'views':
-            self.INITIALVIEWS = self._getvideoInfo(Views=True)
+            self.INITIALVIEWS = self.tiktok_info._getvideoInfo(Views=True)
         elif TYPE == 'shares':
-            self.INITIALVIEWS = self._getvideoInfo(Shares=True)
+            self.INITIALVIEWS = self.tiktok_info._getvideoInfo(Shares=True)
         elif TYPE == 'hearts':
-            self.INITIALVIEWS = self._getvideoInfo(Likes=True)
+            self.INITIALVIEWS = self.tiktok_info._getvideoInfo(Likes=True)
         elif TYPE == 'favorites':
             self.INITIALVIEWS = '0'
         try:
@@ -158,60 +176,83 @@ class Program():
 
     def GetViews(self):
         time.sleep(0.5)
-        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.firstStep[TYPE]))).send_keys(VIDEO)
+        WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH, Static.firstStep[TYPE]))).send_keys(VIDEO)
+        
         for _ in range(AMOUNT):
             os.system("cls") if os.name == 'nt' else os.system("clear")
             self._banner(self.INDEX)
             time.sleep(0.5)
-            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.secondStep[TYPE]))).click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH, Static.secondStep[TYPE]))).click()
             time.sleep(3)
+            
             try:
                 element = WebDriverWait(self.driver, SLEEP).until(
-                   EC.presence_of_element_located((By.XPATH, Static.thirdStep[TYPE]))
+                    EC.presence_of_element_located((By.XPATH, Static.thirdStep[TYPE]))
                 )
                 text = element.text
                 if text:
-                  print(f"{Fore.RED}[Error] {Style.RESET_ALL}{text}")
-            except:
-               pass
+                    total_seconds = parse_cooldown(text)
+                    
+                    if total_seconds > 0:
+                        while total_seconds > 0:
+                            minutes, seconds = divmod(total_seconds, 60)
+                            print(f"\r{Fore.RED}[Error] {Style.RESET_ALL}Please wait {minutes} minute(s) {seconds} second(s) for your next submit!", end='')
+                            time.sleep(1)
+                            total_seconds -= 1
+                        print()
+
+            except Exception as e:
+                print(f"{Fore.RED}[Error] {Style.RESET_ALL}An exception occurred: {e}")
+
             waiting_timer = 0
             while True:
                 if not self.isReady():
-                    print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}",end="\r")
+                    print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}", end="\r")
                     time.sleep(3)
                     waiting_timer += 1
                     if TYPE != 'hearts':
                         if waiting_timer >= 70:
-                            print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 5 minutes. Check Video Link!{Style.RESET_ALL}")
+                            print(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}Program is waiting for more than 5 minutes. Check Video Link!{Style.RESET_ALL}")
                             sys.exit()
                     elif TYPE == 'hearts':
-                       if waiting_timer >= 700:
-                            print(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}Program is waiting for more than 35 minutes. Check Video Link!{Style.RESET_ALL}")
-                            sys.exit() 
+                        if waiting_timer >= 700:
+                            print(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}Program is waiting for more than 35 minutes. Check Video Link!{Style.RESET_ALL}")
+                            sys.exit()
                 else:
                     time.sleep(1.5)
                     break
+
             waiting_timer = 0
             time.sleep(2)
-            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.fourthStep[TYPE]))).click()
+            WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH, Static.fourthStep[TYPE]))).click()
             time.sleep(2)
+            
             try:
-                WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,Static.finalButton[TYPE]))).click()
-                if TYPE == 'views':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
-                if TYPE == 'shares':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+50 Shares Added Successfully!{Style.RESET_ALL}")
-                if TYPE == 'favorites':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+100 Favorites Added Successfully!{Style.RESET_ALL}")
-                if TYPE == 'hearts':print(F"{datetime.now().strftime("%H:%M:%S")} {SUCCESS}{Fore.WHITE}+10 Hearts Added Successfully!{Style.RESET_ALL}")
-                if TYPE == 'views': self.COUNTER2 += 1000
-                if TYPE == 'shares': self.COUNTER2 += 50
-                if TYPE == 'favorites': self.COUNTER2 += 100
-                if TYPE == 'hearts' : self.COUNTER2 += 10
+                WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH, Static.finalButton[TYPE]))).click()
+                
+                if TYPE == 'views':
+                    print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!{Style.RESET_ALL}")
+                    self.COUNTER2 += 1000
+                elif TYPE == 'shares':
+                    print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+50 Shares Added Successfully!{Style.RESET_ALL}")
+                    self.COUNTER2 += 50
+                elif TYPE == 'favorites':
+                    print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+100 Favorites Added Successfully!{Style.RESET_ALL}")
+                    self.COUNTER2 += 100
+                elif TYPE == 'hearts':
+                    print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+10 Hearts Added Successfully!{Style.RESET_ALL}")
+                    self.COUNTER2 += 10
+                
                 if self.COUNTER2 >= self.EACH_VIEWS:
                     self.Webhook.post(content=self.MESSAGE)
                     self.COUNTER2 = 0
-            except:
+
+            except Exception as e:
+                print(f"{Fore.RED}[Error] {Style.RESET_ALL}An exception occurred: {e}")
                 self.driver.refresh()
                 time.sleep(2)
                 self.SelectType()
+
             self.INDEX += 1
             time.sleep(3)
     def isReady(self):
@@ -222,13 +263,13 @@ class Program():
         def _gather(type):
             try:
                 if type == 'views':
-                    return int(self._getvideoInfo(Views=True))
+                    return int(self.tiktok_info._getvideoInfo(Views=True))
                 elif type == 'likes':
-                    return int(self._getvideoInfo(Likes=True))
+                    return int(self.tiktok_info._getvideoInfo(Likes=True))
                 elif type == 'shares':
-                    return int(self._getvideoInfo(Shares=True))
+                    return int(self.tiktok_info._getvideoInfo(Shares=True))
                 elif type == 'creator':
-                    return self._getvideoInfo(Creator=True)
+                    return self.tiktok_info._getvideoInfo(Creator=True)
             except:
                 return 0
         creator = _gather('creator')
@@ -267,13 +308,13 @@ class Program():
                 sys.exit()
         
     def _banner(self,I):
-        if TYPE == 'views' : views = self._getvideoInfo(Views = True)
+        if TYPE == 'views' : views = self.tiktok_info._getvideoInfo(Views = True)
         if TYPE == 'views' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
-        if TYPE == 'shares' : shares = self._getvideoInfo(Shares = True)
+        if TYPE == 'shares' : shares = self.tiktok_info._getvideoInfo(Shares = True)
         if TYPE == 'shares' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'favorites' : favorites = 0
         if TYPE == 'favorites' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.COUNTER2}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
-        if TYPE == 'hearts' : hearts = self._getvideoInfo(Likes = True)
+        if TYPE == 'hearts' : hearts = self.tiktok_info._getvideoInfo(Likes = True)
         if TYPE == 'hearts' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
@@ -286,24 +327,6 @@ class Program():
         except:
             print(f"{WARNING}Unable to get Video ID{Style.RESET_ALL}")
             return
-    def _getvideoInfo(self,Creator = False,Views = False,Likes = False,Shares = False):
-        retry = 0
-        while True:
-            if retry > 7:
-                break
-            try:
-                response = requests.get(f"https://countik.com/api/videoinfo/{self.VIDEOID}").json()
-            except:
-                retry += 1
-                continue
-            try:
-                if Creator : return response['creator']
-                elif Views : return response['plays']
-                elif Likes : return response['likes']
-                elif Shares : return response['shares']
-            except :
-                retry += 1
-        return "Unable to gather."
     def _convertHours(self,hours):
         td = timedelta(seconds=int(hours * 3600))
 
