@@ -49,9 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.1.1.1
-      - Added Hearts!
-
+# Version 2.2.0
+      - Contribution by 5k-omar which corrected many bugs and added new features!
+      
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 
 **Please note: This project is not intended for commercial use. It is provided for educational and personal use only.**
