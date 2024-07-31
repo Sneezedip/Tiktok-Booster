@@ -399,7 +399,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.1.1.2")     
+    CheckVersion("2.2.0")     
     Credits() 
     IsFirst()        
     Program()
