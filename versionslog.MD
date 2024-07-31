@@ -1,3 +1,6 @@
+# Version 2.2.0
+      - Contribution by 5k-omar which corrected many bugs and added new features!
+
 # Version 2.1.1.2
       - Hotfix For Integers.
 
