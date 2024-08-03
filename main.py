@@ -81,7 +81,7 @@ def CheckVersion(current_version):
     response = requests.get("https://raw.githubusercontent.com/Sneezedip/Tiktok-Booster/main/VERSION")
     if response.text.strip() != current_version:
         while True:
-            u = input(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
+            u = input("f{datetime.now().strftime("%H:%M:%S")} {WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
             if u == "y":
                 print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}Updating...{Style.RESET_ALL}")
                 Download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main","./")
