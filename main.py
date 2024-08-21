@@ -39,6 +39,7 @@ INFO = f"{Fore.BLUE}[INFO] "
 WARNING = f"{Fore.RED}[WARNING] "
 
 SLEEP = 15
+
 def IsFirst():
     file_path = os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt')
     file_exists = os.path.isfile(file_path)
@@ -47,7 +48,7 @@ def IsFirst():
     else:
         with open(os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt'),"w") as file:
             file.write("Don't Worry, this isn't a virus, just a check to see if it's your first time. :)")
-            print(f"{INFO}First Time Detected. Welcome! (This won't appear anymore)")
+            print(f"{INFO}First Time Detected. Welcome! (This won't appear anymore){Style.RESET_ALL}")
         webbrowser.open("https://discord.gg/nAa5PyxubF")
 
 def Credits():
@@ -97,6 +98,7 @@ if not os.path.exists('Tesseract'):
 
 class Program():
     def __init__(self):
+        self.ELEMENTS = []
         self.tiktok_info = TikTokVideoInfo(VIDEO)
         self.COUNTER2 = 0
         self.WEBHOOK = WEBHOOK
@@ -147,7 +149,26 @@ class Program():
             time.sleep(1.5)
             continue
         time.sleep(3)
+        self._check_available()
         self.SelectType()
+
+    def _check_available(self):
+        available = False
+        if WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[6]/div/div[2]/div/div/div[2]/div/button'))).is_enabled():
+            self.ELEMENTS.append("followers")
+        if WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[6]/div/div[2]/div/div/div[6]/div/button'))).is_enabled():
+            self.ELEMENTS.append("views")
+        if WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[6]/div/div[2]/div/div/div[7]/div/button'))).is_enabled():
+            self.ELEMENTS.append("shares")
+        if WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[6]/div/div[2]/div/div/div[8]/div/button'))).is_enabled():
+            self.ELEMENTS.append("favorites")
+        for element in self.ELEMENTS:
+            if element == TYPE:
+                available = True
+                break
+        if not available:
+            print(f"{WARNING} {TYPE} not available.. Change your TYPE in config.cfg\n{INFO}List of available TYPES : {self.ELEMENTS}{Style.RESET_ALL}")
+            sys.exit()
 
     def PassCaptcha(self):
         with open('Captcha/captcha.png', 'wb') as file:

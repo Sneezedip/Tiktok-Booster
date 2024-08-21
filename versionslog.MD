@@ -1,3 +1,7 @@
+# Version 2.3.0
+   - Fixed infinite loop in "Installing Libraries"
+   - Now the program tells what TYPES are available if you choose one thats unavailable.
+
 # Version 2.2.0
       - Contribution by 5k-omar which corrected many bugs and added new features!
 

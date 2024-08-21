@@ -4,3 +4,4 @@ pillow
 fake_headers
 colorama
 discordwebhook
+fake_useragent
