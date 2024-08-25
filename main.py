@@ -225,25 +225,6 @@ class Program():
             except Exception as e:
                 print(f"{Fore.RED}[Error] {Style.RESET_ALL}An exception occurred: {e}")
 
-            waiting_timer = 0
-            while True:
-                if not self.isReady():
-                    print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}Waiting Timer... (x{waiting_timer}){Style.RESET_ALL}", end="\r")
-                    time.sleep(3)
-                    waiting_timer += 1
-                    if TYPE != 'hearts':
-                        if waiting_timer >= 70:
-                            print(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}Program is waiting for more than 5 minutes. Check Video Link!{Style.RESET_ALL}")
-                            sys.exit()
-                    elif TYPE == 'hearts':
-                        if waiting_timer >= 700:
-                            print(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}Program is waiting for more than 35 minutes. Check Video Link!{Style.RESET_ALL}")
-                            sys.exit()
-                else:
-                    time.sleep(1.5)
-                    break
-
-            waiting_timer = 0
             time.sleep(2)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH, Static.fourthStep[TYPE]))).click()
             time.sleep(2)
@@ -269,7 +250,10 @@ class Program():
                     self.COUNTER2 = 0
 
             except Exception as e:
-                print(f"{Fore.RED}[Error] {Style.RESET_ALL}An exception occurred: {e}")
+                if "element click intercepted" in str(e):
+                    print(f"{Fore.RED}[Error] {Style.RESET_ALL} Program couldn't proceed. Restart the program and if the error persists, please set HEADLESS to False in the config.cfg file. (ERROR 000)")
+                else:
+                    print(f"{Fore.RED}[Error] OPEN A TICKET IN DISCORD WITH THIS INFORMATION (ERROR 001){Style.RESET_ALL}An exception occurred: {e}")
                 self.driver.refresh()
                 time.sleep(2)
                 self.SelectType()
@@ -420,7 +404,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.3.0")     
+    CheckVersion("2.3.1")     
     Credits() 
     IsFirst()        
     Program()

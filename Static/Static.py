@@ -1,14 +1,5 @@
-from fake_headers import Headers
-class Static():
-    def GenerateHeaders():
-        #Thanks to some user on StackOverflow
-        header = Headers(
-            browser="chrome",
-            os="win",
-            headers=False
-        )
-        return header.generate()['User-Agent']
-    
+from fake_useragent import UserAgent
+class Static(): 
     typeValues = {
         'views' : '/html/body/div[6]/div/div[2]/div/div/div[6]/div/button',
         'commenthearts' : '/html/body/div[6]/div/div[2]/div/div/div[4]/div/button',
@@ -52,4 +43,4 @@ class Static():
         'favorites' : '//*[@id="c2VuZF9mb2xsb3dlcnNfdGlrdG9L"]/div[1]/div/form/button',
         'hearts' : '//*[@id="c2VuZE9nb2xsb3dlcnNfdGlrdG9r"]/div[1]/div/form/button'
     }
-    ChromeOptions = ["--disable-gpu","--incognito",f"user-agent={GenerateHeaders}"]
+    ChromeOptions = ["--window-size=1920,1080","--disable-gpu","--incognito",f"user-agent={UserAgent().random}"]

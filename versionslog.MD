@@ -1,3 +1,7 @@
+# Version 2.3.1
+   -  Added more Errors handling.
+   -  Fixed error 000 (Couldn't click final button when in Headless mode).
+
 # Version 2.3.0
    - Fixed infinite loop in "Installing Libraries"
    - Now the program tells what TYPES are available if you choose one thats unavailable.

@@ -49,9 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.3.0
-   - Fixed infinite loop in "Installing Libraries"
-   - Now the program tells what TYPES are available if you choose one thats unavailable.
+# Version 2.3.1
+   -  Added more Errors handling.
+   -  Fixed error 000 (Couldn't click final button when in Headless mode).
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 
