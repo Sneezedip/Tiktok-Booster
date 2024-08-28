@@ -313,6 +313,11 @@ class Program():
                 sys.exit()
         
     def _banner(self,I):
+        views = 0
+        shares = 0
+        favorites = 0
+        hearts = 0
+
         if TYPE == 'views' : views = self.tiktok_info._getvideoInfo(Views = True)
         if TYPE == 'views' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'shares' : shares = self.tiktok_info._getvideoInfo(Shares = True)
