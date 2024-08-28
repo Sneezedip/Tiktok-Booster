@@ -1,7 +1,8 @@
-import time,configparser,os,sys,zipfile,tempfile,webbrowser
+import time,configparser,os,sys,zipfile,tempfile,webbrowser,shutil
 from Static.Static import Static
 try:
     import requests
+    from tqdm import tqdm
     from selenium import webdriver
     from selenium.webdriver.common.by import By
     import pytesseract
@@ -40,6 +41,8 @@ WARNING = f"{Fore.RED}[WARNING] "
 
 SLEEP = 15
 
+SKIP_WEBHOOK_VERIFICATION = config.getboolean('Settings','SKIP_WEBHOOK_CONFIGURATION')
+
 def IsFirst():
     file_path = os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt')
     file_exists = os.path.isfile(file_path)
@@ -71,27 +74,62 @@ def parse_cooldown(text):
     return total_seconds
     
 def Download(url, extract_to='.'):
-    response = requests.get(url)
+    if "Sneezedip" in url:
+        print(f'{INFO}{Fore.WHITE}Downloading new version, please wait...{Style.RESET_ALL}')
+    else:
+        print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait...{Style.RESET_ALL}')
+
+    response = requests.get(url, stream=True)
+    total_size = int(response.headers.get('content-length', 0))
     zip_path = os.path.join(extract_to, "downloaded_file.zip")
+
     with open(zip_path, 'wb') as file:
-        file.write(response.content)
+        with tqdm(total=total_size, unit='B', unit_scale=True, desc=f"{WAITING} {Fore.WHITE}Downloading {'New Version' if "Sneezedip" in url else 'Tesseract'} {Style.RESET_ALL}") as pbar:
+            for data in response.iter_content(1024):
+                file.write(data)
+                pbar.update(len(data))
+
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(extract_to)
+        total_files = len(zip_ref.infolist())
+        with tqdm(total=total_files, unit='file', desc=f"{WAITING} {Fore.WHITE}Extracting {'New Version' if "Sneezedip" in url else 'Tesseract'}{Style.RESET_ALL}") as pbar:
+            for file in zip_ref.infolist():
+                zip_ref.extract(file, extract_to)
+                pbar.update(1)
     os.remove(zip_path)
+
+    if 'Sneezedip' in url:
+        with os.scandir('Tiktok-Booster-main') as entries:
+            for entry in entries:
+                    if entry.is_dir():
+                        with os.scandir(entry) as entries_folder:
+                            for entry_folder in entries_folder:
+                                try:
+                                    os.replace(f"Tiktok-Booster-main/{entry.name}/{entry_folder.name}",f"./{entry.name}/{entry_folder.name}")
+                                except Exception as e:
+                                    print(e)
+                                continue
+                    if entry.is_file():
+                        try:
+                            os.replace(f"Tiktok-Booster-main/{entry.name}",f"./{entry.name}")
+                        except Exception as e:
+                            print(e)
+                        continue
+    print(f'{SUCCESS}{Fore.WHITE}{'New Version' if "Sneezedip" in url else 'Tesseract'} Downloaded and Extracted Successfully!{Style.RESET_ALL}')
+    print(f'{WARNING}{Fore.WHITE}Please Restart the program!{Style.RESET_ALL}')
+    
+
 def CheckVersion(current_version):
     response = requests.get("https://raw.githubusercontent.com/Sneezedip/Tiktok-Booster/main/VERSION")
     if response.text.strip() != current_version:
         while True:
             u = input(f"{datetime.now().strftime("%H:%M:%S")} {WARNING}{Fore.WHITE}NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
             if u == "y":
-                print(f"{datetime.now().strftime("%H:%M:%S")} {WAITING}Updating...{Style.RESET_ALL}")
                 Download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main","./")
-                print(f"{datetime.now().strftime("%H:%M:%S")} {INFO}Updated. Check the new folder created.{Style.RESET_ALL}")
                 sys.exit()
             elif u == "n":
                 return
 if not os.path.exists('Tesseract'):
-    print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait..{Style.RESET_ALL}')
+    print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait..{Style.RESET_ALL}',end="\r")
     url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'
     extract_to = './'
     Download(url, extract_to)
@@ -108,7 +146,8 @@ class Program():
         except:
             self.MESSAGE = MESSAGE
         self.Webhook = Discord(url=self.WEBHOOK)
-        self._menu()
+        if not SKIP_WEBHOOK_VERIFICATION:
+            self._menu()
         self.INDEX = 0
         self.VIDEOID = VIDEO.split("/")[5] if self._checkVideo() == "www" else self._getVMID()
         if TYPE == 'views':
@@ -217,13 +256,13 @@ class Program():
                     if total_seconds > 0:
                         while total_seconds > 0:
                             minutes, seconds = divmod(total_seconds, 60)
-                            print(f"\r{Fore.RED}[Error] {Style.RESET_ALL}Please wait {minutes} minute(s) {seconds} second(s) for your next submit!", end='')
+                            print(f"\r{WAITING} Waiting {minutes} minute(s) {seconds} second(s) before boosting! {Style.RESET_ALL}", end='')
                             time.sleep(1)
                             total_seconds -= 1
                         print()
 
             except Exception as e:
-                print(f"{Fore.RED}[Error] {Style.RESET_ALL}An exception occurred: {e}")
+                print(f"{WARNING}An exception occurred: {e}")
 
             time.sleep(2)
             WebDriverWait(self.driver, SLEEP).until(EC.presence_of_element_located((By.XPATH, Static.fourthStep[TYPE]))).click()
@@ -250,7 +289,7 @@ class Program():
                     self.COUNTER2 = 0
 
             except Exception as e:
-                if "element click intercepted" in str(e):
+                if "element click intercepted" in str(e).lower():
                     print(f"{Fore.RED}[Error] {Style.RESET_ALL} Program couldn't proceed. Restart the program and if the error persists, please set HEADLESS to False in the config.cfg file. (ERROR 000)")
                 else:
                     print(f"{Fore.RED}[Error] OPEN A TICKET IN DISCORD WITH THIS INFORMATION (ERROR 001){Style.RESET_ALL}An exception occurred: {e}")
@@ -313,18 +352,14 @@ class Program():
                 sys.exit()
         
     def _banner(self,I):
-        views = 0
-        shares = 0
-        favorites = 0
-        hearts = 0
-
-        if TYPE == 'views' : views = self.tiktok_info._getvideoInfo(Views = True)
+        temp = TikTokVideoInfo(VIDEO)
+        if TYPE == 'views' : views = temp._getvideoInfo(Views = True)
         if TYPE == 'views' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
-        if TYPE == 'shares' : shares = self.tiktok_info._getvideoInfo(Shares = True)
+        if TYPE == 'shares' : shares = temp._getvideoInfo(Shares = True)
         if TYPE == 'shares' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'favorites' : favorites = 0
         if TYPE == 'favorites' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.COUNTER2}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
-        if TYPE == 'hearts' : hearts = self.tiktok_info._getvideoInfo(Likes = True)
+        if TYPE == 'hearts' : hearts = temp._getvideoInfo(Likes = True)
         if TYPE == 'hearts' : print(f"{INFO}[{round((I/AMOUNT)*100,1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts-self.INITIALVIEWS)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convertHours(round((AMOUNT-I) * 2 / 60,2))} Remaining.{Style.RESET_ALL})")
     def _checkVideo(self):
         if VIDEO.split("/")[2].__contains__("vm"):
@@ -409,7 +444,7 @@ class Program():
 
 if __name__ == "__main__": 
     os.system("cls") if os.name == 'nt' else os.system("clear") 
-    CheckVersion("2.3.1")     
+    CheckVersion("2.4.0")     
     Credits() 
     IsFirst()        
     Program()

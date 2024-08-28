@@ -1,10 +1,19 @@
+# Version 2.4.0
+      -  Now the Auto Updater replaces all the files by itself!
+      -  Added an option in config.cfg that bypasses Webhook Configuration when you start the program.
+      -  Added a run.bat file to start the program.
+      -  Added Progress bar when downloading Tesseract.
+      -  Fixed program not updating the amount of views each time it boosts.
+      -  Fixed some color styles and prints.
+      -  Bug Fixes.
+
 # Version 2.3.1
-   -  Added more Errors handling.
-   -  Fixed error 000 (Couldn't click final button when in Headless mode).
+      -  Added more Errors handling.
+      -  Fixed error 000 (Couldn't click final button when in Headless mode).
 
 # Version 2.3.0
-   - Fixed infinite loop in "Installing Libraries"
-   - Now the program tells what TYPES are available if you choose one thats unavailable.
+      - Fixed infinite loop in "Installing Libraries"
+      - Now the program tells what TYPES are available if you choose one thats unavailable.
 
 # Version 2.2.0
       - Contribution by 5k-omar which corrected many bugs and added new features!
@@ -43,7 +52,6 @@
 # Version 1.4.1
     - Prettier hour format (HH:MM:SS)
     - Fixed Estimated time not working.
-
 
 # Version 1.4.0
     - Created a menu that displays Video Creator,Views,Likes and Shares with confirmation that asks the user to start.

@@ -49,9 +49,14 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.3.1
-   -  Added more Errors handling.
-   -  Fixed error 000 (Couldn't click final button when in Headless mode).
+# Version 2.4.0
+      -  Now the Auto Updater replaces all the files by itself!
+      -  Added an option in config.cfg that bypasses Webhook Configuration when you start the program.
+      -  Added a run.bat file to start the program.
+      -  Added Progress bar when downloading Tesseract.
+      -  Fixed program not updating the amount of views each time it boosts.
+      -  Fixed some color styles and prints.
+      -  Bug Fixes.
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 
