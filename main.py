@@ -262,16 +262,53 @@ class TikTokBooster:
         except (TimeoutException, NoSuchElementException):
             return True
 
+    def _reset_browser(self):
+        """Closes and restarts the browser."""
+        try:
+            self.driver.quit()  # Close the current session
+        except Exception as e:
+            print(f"{WARNING}Error while closing the browser: {e}")
+
+        # Create a new instance of the browser
+        self.driver = webdriver.Chrome(options=self.options)
+
+        # Log back in to the site
+        self.driver.get('https://zefoy.com/')
+        pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
+        try:
+            WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
+                (By.XPATH, '/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
+        except (TimeoutException, NoSuchElementException):
+            pass
+        time.sleep(0.5)
+
+        while not self._handle_captcha():
+            self.driver.refresh()
+            time.sleep(1.5)
+        time.sleep(3)
+        self._check_available()
+
     def _select_type(self):
         """Select the type of action to perform"""
-        try:
-            WebDriverWait(self.driver, SLEEP).until(
-                ec.presence_of_element_located((By.XPATH, Static.typeValues[TYPE]))).click()
-        except (TimeoutException, NoSuchElementException):
-            print(f"{WARNING}Unable to find the button for {TYPE}.. Retrying..")
-            self._select_type()
-        time.sleep(0.3)
-        self._get_views()
+        max_retries = 3
+        retries = 0
+
+        while retries < max_retries:
+            try:
+                WebDriverWait(self.driver, SLEEP).until(
+                    ec.presence_of_element_located((By.XPATH, Static.typeValues[TYPE]))).click()
+                time.sleep(0.3)
+                self._get_views()
+                break
+            except (TimeoutException, NoSuchElementException) as e:
+                retries += 1
+                print(f"{WARNING}Unable to find the button for {TYPE}.. Retrying.. (retry {retries}/{max_retries})")
+                print(f"Exception details: {e}")
+                time.sleep(2 ** retries)  # exponential backoff
+                if retries >= max_retries:
+                    print(f"{WARNING} Max retries reached. Resetting the browser...")
+                    self._reset_browser()
+                    retries = 0  # Reset the retry counter after resetting the browser
 
     def _get_views(self):
         """Perform the main action of getting views, shares, etc."""
