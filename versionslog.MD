@@ -1,3 +1,13 @@
+# Version 2.4.1
+      - Contribution by JJFilipek:
+         - Implemented a retry mechanism in the GetViews method to handle TypeError exceptions. The program will now attempt to retry the operation up to 3 times if an issue occurs.
+         - Updated the _gather_info function in the Program class to align with changes made in the TikTokVideoInfo class.
+         - Refined exception handling throughout the code by narrowing overly broad except clauses to better handle specific types of exceptions.
+         - Added comments to major functions in main.py to improve code readability and understanding.
+         - Updated the requirements.txt file to include fake_useragent as a new dependency.
+         - Refactored code to follow Pythonic conventions, including changing variable names to snake_case and ensuring consistency with PEP 8 guidelines.
+         - Add browser reset logic after max retries in method
+
 # Version 2.4.0
       -  Now the Auto Updater replaces all the files by itself!
       -  Added an option in config.cfg that bypasses Webhook Configuration when you start the program.
