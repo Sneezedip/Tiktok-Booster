@@ -1,8 +1,0 @@
-selenium
-pytesseract
-pillow
-fake_headers
-colorama
-discordwebhook
-fake_useragent
-tqdm
