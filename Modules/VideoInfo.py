@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from fake_useragent import UserAgent
 
+
 class TikTokVideoInfo:
     def __init__(self, video_url):
         self.video_url = video_url
@@ -16,7 +17,8 @@ class TikTokVideoInfo:
         else:
             raise ValueError("Invalid video URL")
 
-    def get_csrf_token_and_cookies(self):
+    @staticmethod
+    def get_csrf_token_and_cookies():
         url = "https://www.trollishly.com/tiktok-counter/"
         headers = {
             'User-Agent': UserAgent().random,
@@ -37,7 +39,8 @@ class TikTokVideoInfo:
 
         return csrf_token, response.cookies
 
-    def post_tiktok_data(self, csrf_token, cookies, unique_id):
+    @staticmethod
+    def post_tiktok_data(csrf_token, cookies, unique_id):
         url = "https://www.trollishly.com/nocache/search_tiktok_user_counter_val/"
         payload = {
             'unique_id': unique_id
@@ -65,7 +68,8 @@ class TikTokVideoInfo:
             print(f"Request Exception: {e}")
             return {'error': 'Error during request'}
 
-    def _getvideoInfo(self, Creator=False, Views=False, Likes=False, Shares=False, Comments=False, post_new_data=False):
+    def _get_video_info(self, Creator=False, Views=False, Likes=False, Shares=False, Comments=False,
+                        post_new_data=False):
         if self.data is None or post_new_data:
             max_retries = 7
             retry = 0
@@ -74,8 +78,8 @@ class TikTokVideoInfo:
                 try:
                     csrf_token, cookies = self.get_csrf_token_and_cookies()
                     self.data = self.post_tiktok_data(csrf_token, cookies, self.VIDEOID)
-                    
-                    #print(f"Data Retrieved: {self.data}") # For debugging :)
+
+                    # print(f"Data Retrieved: {self.data}") # For debugging :)
 
                     if 'error' in self.data:
                         return self.data['error']
@@ -95,3 +99,9 @@ class TikTokVideoInfo:
             return self.data.get('video_share_count', 'Share count not available')
         elif Comments:
             return self.data.get('video_comment_count', 'Comment count not available')
+
+    def get_video_info(self, Creator=False, Views=False, Likes=False, Shares=False, Comments=False,
+                       post_new_data=False):
+        """Public method to safely access _get_video_info."""
+        return self._get_video_info(Creator=Creator, Views=Views, Likes=Likes, Shares=Shares, Comments=Comments,
+                                    post_new_data=post_new_data)
