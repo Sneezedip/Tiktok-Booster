@@ -1,5 +1,4 @@
 # Version 2.5.0
-# Version 2.5.0
       - Added:
          - Added webhook check, so it doesn't delay the program even if the webhook is invalid.
          - Added Followers type (might not be available).
