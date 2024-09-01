@@ -1,8 +1,9 @@
 from fake_useragent import UserAgent
 class Static(): 
     typeValues = {
+        'followers' : '/html/body/div[6]/div/div[2]/div/div/div[2]/div/button',
         'views' : '/html/body/div[6]/div/div[2]/div/div/div[6]/div/button',
-        'commenthearts' : '/html/body/div[6]/div/div[2]/div/div/div[4]/div/button',
+        # 'commenthearts' : '/html/body/div[6]/div/div[2]/div/div/div[4]/div/button', broken!!!
         'favorites': '/html/body/div[6]/div/div[2]/div/div/div[8]/div/button',
         'shares' : '/html/body/div[6]/div/div[2]/div/div/div[7]/div/button',
         'hearts' : '/html/body/div[6]/div/div[2]/div/div/div[3]/div/button'

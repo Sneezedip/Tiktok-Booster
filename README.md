@@ -49,15 +49,21 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.4.1
-      - Contribution by JJFilipek:
-         - Implemented a retry mechanism in the GetViews method to handle TypeError exceptions. The program will now attempt to retry the operation up to 3 times if an issue occurs.
-         - Updated the _gather_info function in the Program class to align with changes made in the TikTokVideoInfo class.
-         - Refined exception handling throughout the code by narrowing overly broad except clauses to better handle specific types of exceptions.
-         - Added comments to major functions in main.py to improve code readability and understanding.
-         - Updated the requirements.txt file to include fake_useragent as a new dependency.
-         - Refactored code to follow Pythonic conventions, including changing variable names to snake_case and ensuring consistency with PEP 8 guidelines.
-         - Add browser reset logic after max retries in method
+# Version 2.5.0
+   - Added:
+      - Added webhook check, so it doesn't delay the program even if the webhook is invalid.
+      - Added Followers type (might not be available).
+      - Added a new class (ProgramUsage) and moved many functions from main.py to Usage.py.
+      - Added a new class (Handler) and moved many functions from main.py to BannersHandler.py.
+   - Fixed:
+      - Fixed estimated time math, to give more accurate results.
+      - Fixed Webhook printing errors in banner
+   - Removed:
+      - Removed unnecessary delay's.
+   - Bonus:
+      - Explained more about each function.
+      - Optimized functions in main.py.
+      - Moved download function from main.py to Usage.py
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 

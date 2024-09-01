@@ -6,7 +6,8 @@ import zipfile
 import tempfile
 import webbrowser
 from Static.Static import Static
-
+from Modules.Usage import ProgramUsage
+from Modules.BannersHandler import Handler
 try:
     import requests
     from tqdm import tqdm
@@ -52,7 +53,7 @@ SLEEP = 15
 SKIP_WEBHOOK_VERIFICATION = config.getboolean('Settings', 'SKIP_WEBHOOK_CONFIGURATION')
 
 
-def is_first_run():
+def  is_first_run():
     """Check if it's the first run of the program"""
     file_path = os.path.join(tempfile.gettempdir(), 'Ttkbooster.txt')
     if not os.path.isfile(file_path):
@@ -85,57 +86,6 @@ def parse_cooldown(text):
     return minutes * 60 + seconds
 
 
-def download(download_url, destination='.'):
-    """Download and extract a file from the given URL"""
-    if "Sneezedip" in download_url:
-        print(f'{INFO}{Fore.WHITE}Downloading new version, please wait...{Style.RESET_ALL}')
-    else:
-        print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait...{Style.RESET_ALL}')
-
-    response = requests.get(download_url, stream=True)
-    total_size = int(response.headers.get('content-length', 0))
-    zip_path = os.path.join(destination, "downloaded_file.zip")
-
-    with open(zip_path, 'wb') as file:
-        with tqdm(total=total_size, unit='B', unit_scale=True,
-                  desc=f"{WAITING} {Fore.WHITE}Downloading "
-                       f"{'New Version' if 'Sneezedip' in download_url else 'Tesseract'} {Style.RESET_ALL}") as pbar:
-            for data in response.iter_content(1024):
-                file.write(data)
-                pbar.update(len(data))
-
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        total_files = len(zip_ref.infolist())
-        with tqdm(total=total_files, unit='file',
-                  desc=f"{WAITING} {Fore.WHITE}Extracting "
-                       f"{'New Version' if 'Sneezedip' in download_url else 'Tesseract'}{Style.RESET_ALL}") as pbar:
-            for file in zip_ref.infolist():
-                zip_ref.extract(file, destination)
-                pbar.update(1)
-    os.remove(zip_path)
-
-    if 'Sneezedip' in download_url:
-        with os.scandir('Tiktok-Booster-main') as entries:
-            for entry in entries:
-                if entry.is_dir():
-                    with os.scandir(entry) as entries_folder:
-                        for entry_folder in entries_folder:
-                            try:
-                                os.replace(f"Tiktok-Booster-main/{entry.name}/{entry_folder.name}",
-                                           f"./{entry.name}/{entry_folder.name}")
-                            except Exception as e:
-                                print(e)
-                            continue
-                if entry.is_file():
-                    try:
-                        os.replace(f"Tiktok-Booster-main/{entry.name}", f"./{entry.name}")
-                    except Exception as e:
-                        print(e)
-                    continue
-    print(f'{SUCCESS}{Fore.WHITE}{"New Version" if "Sneezedip" in download_url else "Tesseract"}'
-          f' Downloaded and Extracted Successfully!{Style.RESET_ALL}')
-    print(f'{WARNING}{Fore.WHITE}Please Restart the program!{Style.RESET_ALL}')
-
 
 def check_version(current_version):
     """Check if a new version of the program is available"""
@@ -145,7 +95,7 @@ def check_version(current_version):
             u = input(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}{Fore.WHITE}"
                       f"NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
             if u == "y":
-                download("https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main", "./")
+                ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,"https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main", "./")
                 sys.exit()
             elif u == "n":
                 return
@@ -155,7 +105,7 @@ if not os.path.exists('Tesseract'):
     print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait..{Style.RESET_ALL}', end="\r")
     url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'
     extract_to = './'
-    download(url, extract_to)
+    ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,url, extract_to)
 
 
 class TikTokBooster:
@@ -164,6 +114,7 @@ class TikTokBooster:
         self.tiktok_info = TikTokVideoInfo(VIDEO)
         self.counter = 0
         self.webhook = WEBHOOK
+        self.webhook_text = WEBHOOK
         self.each_views = EACH_VIEWS
         try:
             self.message = MESSAGE.format(self.each_views)
@@ -173,7 +124,7 @@ class TikTokBooster:
         if not SKIP_WEBHOOK_VERIFICATION:
             self._menu()
         self.index = 0
-        self.video_id = VIDEO.split("/")[5] if self._check_video() == "www" else self._get_vmid()
+        self.video_id = VIDEO.split("/")[5] if ProgramUsage.check_video(VIDEO) == "www" else ProgramUsage.get_vmid(VIDEO)
         self.initial_views = self._get_initial_views()
 
         self.options = webdriver.ChromeOptions()
@@ -197,41 +148,38 @@ class TikTokBooster:
                 (By.XPATH, '/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
         except (TimeoutException, NoSuchElementException):
             pass
-        time.sleep(0.5)
+        
+        try:
+            self.webhook.post(content="Tiktok-Booster Started!") # Quick check on webhook
+            self.is_webhook_valid = True    
+        except (TimeoutException, NoSuchElementException):
+            self.is_webhook_valid = False
 
         while not self._handle_captcha():
             self.driver.refresh()
-            time.sleep(1.5)
-        time.sleep(3)
+            time.sleep(1)
+        time.sleep(1)
         self._check_available()
         self._select_type()
 
     def _get_initial_views(self):
         """Get initial views based on the type"""
         if TYPE == 'views':
-            return self._get_numeric_value(self.tiktok_info.get_video_info(Views=True))
+            return ProgramUsage.get_numeric_value(self.tiktok_info.get_video_info(Views=True))
         elif TYPE == 'shares':
-            return self._get_numeric_value(self.tiktok_info.get_video_info(Shares=True))
+            return ProgramUsage.get_numeric_value(self.tiktok_info.get_video_info(Shares=True))
         elif TYPE == 'hearts':
-            return self._get_numeric_value(self.tiktok_info.get_video_info(Likes=True))
+            return ProgramUsage.get_numeric_value(self.tiktok_info.get_video_info(Likes=True))
         elif TYPE == 'favorites':
             return 0
 
     def _check_available(self):
         """Check if the required features are available"""
         available = False
-        if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
-                (By.XPATH, '/html/body/div[6]/div/div[2]/div/div/div[2]/div/button'))).is_enabled():
-            self.elements.append("followers")
-        if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
-                (By.XPATH, '/html/body/div[6]/div/div[2]/div/div/div[6]/div/button'))).is_enabled():
-            self.elements.append("views")
-        if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
-                (By.XPATH, '/html/body/div[6]/div/div[2]/div/div/div[7]/div/button'))).is_enabled():
-            self.elements.append("shares")
-        if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
-                (By.XPATH, '/html/body/div[6]/div/div[2]/div/div/div[8]/div/button'))).is_enabled():
-            self.elements.append("favorites")
+        for type,xpath in Static.typeValues.items():
+            if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
+                (By.XPATH, xpath))).is_enabled():
+                self.elements.append(type)
         for element in self.elements:
             if element == TYPE:
                 available = True
@@ -280,12 +228,11 @@ class TikTokBooster:
                 (By.XPATH, '/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
         except (TimeoutException, NoSuchElementException):
             pass
-        time.sleep(0.5)
 
         while not self._handle_captcha():
             self.driver.refresh()
-            time.sleep(1.5)
-        time.sleep(3)
+            time.sleep(1)
+        time.sleep(1)
         self._check_available()
 
     def _select_type(self):
@@ -371,8 +318,8 @@ class TikTokBooster:
                                 f"{Style.RESET_ALL}")
                             self.counter += 50
                         elif TYPE == 'favorites':
-                            print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}"
-                                  f"+100 Favorites Added Successfully!{Style.RESET_ALL}")
+                            print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+100 Favorites Added Successfully!"
+                                f"{Style.RESET_ALL}")
                             self.counter += 100
                         elif TYPE == 'hearts':
                             print(
@@ -380,9 +327,10 @@ class TikTokBooster:
                                 f"{Style.RESET_ALL}")
                             self.counter += 10
 
-                        if self.counter >= self.each_views:
-                            self.webhook.post(content=self.message)
-                            self.counter = 0
+                        if self.is_webhook_valid:
+                            if self.counter >= self.each_views:
+                                self.webhook.post(content=self.message)
+                                self.counter = 0
 
                     except Exception as e:
                         if "element click intercepted" in str(e).lower():
@@ -433,27 +381,7 @@ class TikTokBooster:
             except ValueError:
                 return 0
 
-        creator = _gather_info('creator')
-        views = _gather_info('views')
-        likes = _gather_info('likes')
-        shares = _gather_info('shares')
-        views_multi = views + (1000 * AMOUNT) if views else '----'
-        shares_multi = shares + (50 * AMOUNT) if shares else '----'
-        favorites_multi = 0 + (100 * AMOUNT) if shares else '----'
-        hearts_multi = likes + (10 * AMOUNT) if likes else '----'
-
-        os.system("cls")
-        views_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{views_multi} views) {Fore.LIGHTMAGENTA_EX}(Est. {self._convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
-        shares_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{shares_multi} shares) {Fore.LIGHTMAGENTA_EX}(Est. {self._convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
-        favorites_extra = f"(I can't Gather Favorites but you'll get + {Style.BRIGHT}{Fore.GREEN}{favorites_multi} Favorites) {Fore.LIGHTMAGENTA_EX}(Est. {self._convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
-        hearts_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{hearts_multi} hearts) {Fore.LIGHTMAGENTA_EX}(Est. {self._convert_hours(round(AMOUNT * 14 / 60, 2))}){Fore.WHITE} "
-        print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
-        {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
-        {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL} {views_extra if TYPE == 'views' else ''}
-        {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Likes : {Style.RESET_ALL}{Fore.WHITE}{likes} {hearts_extra if TYPE == 'hearts' else ''}
-        {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares} {shares_extra if TYPE == 'shares' else ''}
-        {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Favorites : {Style.RESET_ALL}{Fore.WHITE}--- {favorites_extra if TYPE == 'favorites' else ''}
-        {Style.RESET_ALL}""")
+        Handler.info_banner(_gather_info('views'),_gather_info('shares'),_gather_info('likes'),AMOUNT,INFO,_gather_info('creator'),TYPE) # Show Info Banner
 
         while True:
             us = input(f"{WAITING}Want to start? (y/n)\n-> {Style.RESET_ALL}").lower()
@@ -466,49 +394,18 @@ class TikTokBooster:
         """Show the progress banner"""
         temp = TikTokVideoInfo(VIDEO)
         if TYPE == 'views':
-            views = self._get_numeric_value(temp.get_video_info(Views=True))
-            print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
+            views = ProgramUsage.get_numeric_value(temp.get_video_info(Views=True))
+            print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {ProgramUsage.convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'shares':
-            shares = self._get_numeric_value(temp.get_video_info(Shares=True))
-            print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
+            shares = ProgramUsage.get_numeric_value(temp.get_video_info(Shares=True))
+            print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Shares : {Fore.WHITE}{shares} {Fore.GREEN}[+{int(shares - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {ProgramUsage.convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'favorites':
             favorites = 0
-            print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.counter}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
+            print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Favorites : {Fore.WHITE}{favorites} {Fore.GREEN}[+{self.counter}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {ProgramUsage.convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
         if TYPE == 'hearts':
-            hearts = self._get_numeric_value(temp.get_video_info(Likes=True))
+            hearts = ProgramUsage.get_numeric_value(temp.get_video_info(Likes=True))
             print(
-                f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {self._convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
-
-    @staticmethod
-    def _check_video():
-        """Check if the video is a 'vm' or 'www' type"""
-        return "vm" if VIDEO.split("/")[2].__contains__("vm") else "www"
-
-    @staticmethod
-    def _get_vmid():
-        """Get the video ID from the URL"""
-        response = requests.post("https://countik.com/api/video/exist", json={'url': f"{VIDEO}"}).json()
-        try:
-            return response['id']
-        except KeyError:
-            print(f"{WARNING}Unable to get Video ID{Style.RESET_ALL}")
-            return None
-
-    @staticmethod
-    def _convert_hours(hours):
-        """Convert hours into HH:MM:SS format"""
-        td = timedelta(seconds=int(hours * 3600))
-        hours, remainder = divmod(td.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{hours:02}:{minutes:02}:{seconds:02}"
-
-    @staticmethod
-    def _get_numeric_value(value):
-        """Convert a value to an integer, returning 0 if conversion fails"""
-        try:
-            return int(value)
-        except ValueError:
-            return 0
+                f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {ProgramUsage.convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
 
     def _menu(self):
         """Program configuration menu"""
@@ -518,28 +415,16 @@ class TikTokBooster:
             except KeyError:
                 msg = self.message
             os.system("cls") if os.name == 'nt' else os.system("clear")
-            print(f"""
-                {Fore.BLUE}Program Configuration (Select an Option){Style.RESET_ALL}
 
-                {Fore.GREEN}[1] {Fore.BLACK}-{Fore.MAGENTA} 
-                Webhook [{Fore.RESET}{self.webhook}{Fore.MAGENTA}{Fore.RESET}]
-                {Fore.GREEN}[2] {Fore.BLACK}-{Fore.MAGENTA} Test Webhook
-                {Fore.GREEN}[3] {Fore.BLACK}-{Fore.MAGENTA} Warn Each {Fore.RESET}{self.each_views}{Fore.MAGENTA} {TYPE}
-                {Fore.GREEN}[4] {Fore.BLACK}-{Fore.MAGENTA} Message [{Fore.RESET}{msg}{Fore.MAGENTA}]{Fore.RESET}
-
-                {Fore.GREEN}[5] {Fore.BLACK}-{Fore.LIGHTYELLOW_EX} Save Current Config{Fore.RESET}
-
-                {Fore.GREEN}[99] {Fore.BLACK}-{Fore.LIGHTYELLOW_EX} Start!{Fore.RESET}
-
-                """)
+            Handler.webhook_banner(self.webhook_text,self.each_views,TYPE,msg)
 
             try:
                 user_input = int(input("-> "))
 
                 if user_input in range(1, 6) or user_input == 99:
                     if user_input == 1:
-                        self.webhook = input("Insert new -> ")
-                        self.webhook = Discord(url=self.webhook)
+                        self.webhook_text = input("Insert new -> ")
+                        self.webhook = Discord(url=self.webhook_text)
                     if user_input == 2:
                         try:
                             self.webhook.post(content="**Test Message To Webhook From TikTok Booster**")
@@ -547,7 +432,6 @@ class TikTokBooster:
                         except (TimeoutException, NoSuchElementException):
                             print(Fore.RED + "Invalid Webhook!" + Style.RESET_ALL)
                             time.sleep(0.5)
-                        time.sleep(1)
                     if user_input == 3:
                         try:
                             self.each_views = int(input("Insert new -> "))
@@ -579,7 +463,7 @@ class TikTokBooster:
 
 if __name__ == "__main__":
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.4.1")
+    check_version("2.5.0")
     show_credits()
     is_first_run()
     TikTokBooster()
