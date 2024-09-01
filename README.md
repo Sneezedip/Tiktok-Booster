@@ -50,20 +50,20 @@ To run the program, follow these steps:
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
 # Version 2.5.0
-   - Added:
-      - Added webhook check, so it doesn't delay the program even if the webhook is invalid.
-      - Added Followers type (might not be available).
-      - Added a new class (ProgramUsage) and moved many functions from main.py to Usage.py.
-      - Added a new class (Handler) and moved many functions from main.py to BannersHandler.py.
-   - Fixed:
-      - Fixed estimated time math, to give more accurate results.
-      - Fixed Webhook printing errors in banner
-   - Removed:
-      - Removed unnecessary delay's.
-   - Bonus:
-      - Explained more about each function.
-      - Optimized functions in main.py.
-      - Moved download function from main.py to Usage.py
+      - Added:
+         - Added webhook check, so it doesn't delay the program even if the webhook is invalid.
+         - Added Followers type (might not be available).
+         - Added a new class (ProgramUsage) and moved many functions from main.py to Usage.py.
+         - Added a new class (Handler) and moved many functions from main.py to BannersHandler.py.
+      - Fixed:
+         - Fixed estimated time math, to give more accurate results.
+         - Fixed Webhook printing errors in banner
+      - Removed:
+         - Removed unnecessary delay's.
+      - Bonus:
+         - Explained more about each function.
+         - Optimized functions in main.py.
+         - Moved download function from main.py to Usage.py
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
 
