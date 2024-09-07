@@ -1,8 +1,11 @@
-import requests
-from bs4 import BeautifulSoup
-import re
-from fake_useragent import UserAgent
-
+import os
+try:
+    import requests
+    from bs4 import BeautifulSoup
+    import re
+    from fake_useragent import UserAgent
+except:
+    os.system("pip install -r requirements.txt")
 
 class TikTokVideoInfo:
     def __init__(self, video_url):

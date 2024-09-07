@@ -1,4 +1,8 @@
-from fake_useragent import UserAgent
+import os
+try:
+    from fake_useragent import UserAgent
+except:
+    os.system("pip install -r requirements.txt")
 class Static(): 
     typeValues = {
         'followers' : '/html/body/div[6]/div/div[2]/div/div/div[2]/div/button',
