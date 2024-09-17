@@ -1,3 +1,7 @@
+# Version 2.6.1
+   - Fixed:
+      - Fixed modules not installing.
+
 # Version 2.6.0
    - Added:
       - Key Validation.

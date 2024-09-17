@@ -1,8 +1,11 @@
-import os
+import os,sys
 try:
     from fake_useragent import UserAgent
-except:
+except ImportError:
+    print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
+    print('Libraries installed. Restart the program!')
+    sys.exit()
 class Static(): 
     typeValues = {
         'followers' : '/html/body/div[6]/div/div[2]/div/div/div[2]/div/button',

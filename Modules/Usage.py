@@ -1,13 +1,20 @@
-import hashlib
-import subprocess
-import requests,os
-import zipfile
-from datetime import datetime,timedelta
-import shutil
-from colorama import Fore,Style
-import colorama
-from tqdm import tqdm
-import tempfile
+import sys
+try:
+    import hashlib
+    import subprocess
+    import requests,os
+    import zipfile
+    from datetime import datetime,timedelta
+    import shutil
+    from colorama import Fore,Style
+    import colorama
+    from tqdm import tqdm
+    import tempfile
+except ImportError:
+    print('Installing Libraries...')
+    os.system("pip install -r requirements.txt")
+    print('Libraries installed. Restart the program!')
+    sys.exit()
 class ProgramUsage():
     def check_video(VIDEO):
         """

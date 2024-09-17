@@ -1,9 +1,15 @@
-import os
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import NoSuchElementException
-from colorama import Fore,Style
-from discordwebhook import Discord
-from Modules.Usage import ProgramUsage
+import os,sys
+try:
+    from selenium.common.exceptions import TimeoutException
+    from selenium.common.exceptions import NoSuchElementException
+    from colorama import Fore,Style
+    from discordwebhook import Discord
+    from Modules.Usage import ProgramUsage
+except ImportError:
+    print('Installing Libraries...')
+    os.system("pip install -r requirements.txt")
+    print('Libraries installed. Restart the program!')
+    sys.exit()
 class Handler:
     def info_banner(views,shares,likes,AMOUNT,INFO,creator,TYPE):
         views_multi = views + (1000 * AMOUNT) if views else '----'

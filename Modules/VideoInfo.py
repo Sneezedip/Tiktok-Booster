@@ -1,11 +1,14 @@
-import os
+import os,sys
 try:
     import requests
     from bs4 import BeautifulSoup
     import re
     from fake_useragent import UserAgent
-except:
+except ImportError:
+    print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
+    print('Libraries installed. Restart the program!')
+    sys.exit()
 
 class TikTokVideoInfo:
     def __init__(self, video_url):

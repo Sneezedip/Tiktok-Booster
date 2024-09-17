@@ -49,11 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.6.0
-   - Added:
-      - Key Validation.
+# Version 2.6.1
    - Fixed:
-      - Fixed fake_useragent module not installing.
+      - Fixed modules not installing.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
