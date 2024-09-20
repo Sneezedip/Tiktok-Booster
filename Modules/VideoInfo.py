@@ -45,11 +45,10 @@ class TikTokVideoInfo:
 
         return csrf_token, response.cookies
 
-    @staticmethod
-    def post_tiktok_data(csrf_token, cookies, unique_id):
+    def post_tiktok_data(self, csrf_token, cookies):
         url = "https://www.trollishly.com/nocache/search_tiktok_user_counter_val/"
         payload = {
-            'unique_id': unique_id
+            'username': self.VIDEOID
         }
         headers = {
             'User-Agent': UserAgent().random,
@@ -83,7 +82,7 @@ class TikTokVideoInfo:
             while retry <= max_retries:
                 try:
                     csrf_token, cookies = self.get_csrf_token_and_cookies()
-                    self.data = self.post_tiktok_data(csrf_token, cookies, self.VIDEOID)
+                    self.data = self.post_tiktok_data(csrf_token, cookies)
 
                     # print(f"Data Retrieved: {self.data}") # For debugging :)
 
