@@ -480,7 +480,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.6.1")
+    check_version("2.6.2")
     show_credits()
     is_first_run()
     TikTokBooster()
