@@ -1,3 +1,9 @@
+# Version 2.7.0
+   - Added:
+      - New menu to select the TYPE.
+   - Removed:
+      - Sandbox errors when starting webdriver.
+
 # Version 2.6.1
    - Fixed:
       - Fixed modules not installing.

@@ -49,9 +49,11 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.6.1
-   - Fixed:
-      - Fixed modules not installing.
+# Version 2.7.0
+   - Added:
+      - New menu to select the TYPE.
+   - Removed:
+      - Sandbox errors when starting webdriver.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

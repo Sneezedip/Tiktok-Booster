@@ -142,7 +142,6 @@ class TikTokBooster:
               f"{Style.RESET_ALL}")
         self.driver = webdriver.Chrome(options=self.options)
 
-        self._show_menu()
 
         self.driver.get('https://zefoy.com/')
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
@@ -161,8 +160,10 @@ class TikTokBooster:
         while not self._handle_captcha():
             self.driver.refresh()
             time.sleep(1)
-        time.sleep(1)
         self._check_available()
+        self._show_typeconfig()
+        self._show_menu()
+        time.sleep(1)
         self._select_type()
 
     def _get_initial_views(self):
@@ -182,19 +183,11 @@ class TikTokBooster:
         if ProgramUsage.vk():
             pass
         """Check if the required features are available"""
-        available = False
+        # available = False
         for type,xpath in Static.typeValues.items():
             if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
                 (By.XPATH, xpath))).is_enabled():
                 self.elements.append(type)
-        for element in self.elements:
-            if element == TYPE:
-                available = True
-                break
-        if not available:
-            print(f"{WARNING} {TYPE} not available.. Change your TYPE in config.cfg\n{INFO}List of available TYPES : "
-                  f"{self.elements}{Style.RESET_ALL}")
-            sys.exit()
 
     def _handle_captcha(self):
         if ProgramUsage.vk():
@@ -373,6 +366,51 @@ class TikTokBooster:
             ec.presence_of_element_located((By.XPATH, Static.readyValues[TYPE]))).text.__contains__('READY') or len(
             WebDriverWait(self.driver, SLEEP).until(
                 ec.presence_of_element_located((By.XPATH, Static.readyValues[TYPE]))).text) <= 0
+    def _show_typeconfig(self):
+        global TYPE
+        us = 0
+        def available_color(type):
+            if type in self.elements:
+                return Fore.GREEN
+            return Fore.RED
+        """Show the program configuration menu"""
+        os.system("cls") if os.name == 'nt' else os.system("clear")
+        print("Type Configuration : \n")
+        print(f"{available_color('views')}[{'1' if available_color('views') == Fore.GREEN else '-'}] {'Views'} {'[SELECTED]' if TYPE.lower() == 'views' else ''}")
+        print(f"{available_color('followers')}[{'2' if available_color('followers') == Fore.GREEN else '-'}] {'Followers'} {'[SELECTED]' if TYPE.lower() == 'followers' else ''}")
+        print(f"{available_color('favorites')}[{'3' if available_color('favorites') == Fore.GREEN else '-'}] {'Favorites'} {'[SELECTED]' if TYPE.lower() == 'favorites' else ''}")
+        print(f"{available_color('shares')}[{'4' if available_color('shares') == Fore.GREEN else '-'}] {'Shares'} {'[SELECTED]' if TYPE.lower() == 'shares' else ''}")
+        print(f"{available_color('hearts')}[{'5' if available_color('hearts') == Fore.GREEN else '-'}] {'Hearts'} {'[SELECTED]' if TYPE.lower() == 'hearts' else ''}")
+        print(Fore.CYAN,"\n[99] - Start!",Style.RESET_ALL)
+        print("\n")
+        while True:
+            try:
+                us = int(input(f"{WAITING}Select an option! \n-> {Style.RESET_ALL}").lower())
+                if us >= 1 and us <= 99:
+                    if us >= 6 and us <= 98:
+                        pass
+                    else:
+                        break
+            except:
+                pass
+        match us:
+            case 1: 
+                if 'views' in self.elements:
+                    TYPE = 'views'
+            case 2:
+                if 'followers' in self.elements: 
+                    TYPE = 'followers'
+            case 3:
+                if 'favorites' in self.elements: 
+                    TYPE = 'favorites'
+            case 4:
+                if 'shares' in self.elements: 
+                    TYPE = 'shares'
+            case 5:
+                if 'hearts' in self.elements:
+                    TYPE = 'hearts'
+            case 99: return
+        self._show_typeconfig()
 
     def _show_menu(self):
         if ProgramUsage.vk():
@@ -480,7 +518,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.6.2")
+    check_version("2.7.0")
     show_credits()
     is_first_run()
     TikTokBooster()
