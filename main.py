@@ -111,10 +111,19 @@ if not os.path.exists('Tesseract'):
 
 class TikTokBooster:
     def __init__(self):
+        global VIDEO
         if ProgramUsage.vk():
             pass
         self.elements = []
-        self.tiktok_info = TikTokVideoInfo(VIDEO)
+        while True:
+            try:
+                self.tiktok_info = TikTokVideoInfo(VIDEO)
+                ProgramUsage.change_video_url(VIDEO)
+                break
+            except ValueError:
+                os.system("cls") if os.name == 'nt' else os.system("clear")
+                print(f"{WARNING}Invalid Video URL. Please Change It{Fore.BLUE}\nOLD URL : {Fore.WHITE}{VIDEO}")
+                VIDEO = input(f"{Fore.BLUE}Insert New -> {Fore.WHITE}")
         self.counter = 0
         self.webhook = WEBHOOK
         self.webhook_text = WEBHOOK

@@ -184,6 +184,16 @@ class ProgramUsage():
                 except:
                     ProgramUsage.Activate(sha256_hash,file_path,UUID)     
                 else: 
-                    ProgramUsage.Activate(sha256_hash,file_path,UUID)         
+                    ProgramUsage.Activate(sha256_hash,file_path,UUID)       
+    def change_video_url(new_url):
+        content = []
+        with open("config.cfg", "r") as file:
+            for line in file:
+                if 'VIDEO_URL' in line:
+                    content.append(f"VIDEO_URL = {new_url}\n")
+                else:
+                    content.append(line)
+        with open("config.cfg", "w") as file:
+            file.writelines(content)
                     
 

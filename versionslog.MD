@@ -1,8 +1,14 @@
+# Version 2.7.1
+   - Added:
+      - When changing the Video URL inside Tiktok-Booster (when running in cmd) it'll update the config.cfg in realtime.
+   - Fixed:
+      - Fixed an unnecessary error that would cause the program to crash (Invalid Video URL).
+
 # Version 2.7.0
    - Added:
       - New menu to select the TYPE.
    - Removed:
-      - Sandbox errors when starting webdriver.
+      - Sandbox errors when starting webdriver.rrrr   NNBÇRRRRRR
 
 # Version 2.6.1
    - Fixed:

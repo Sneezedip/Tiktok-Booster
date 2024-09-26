@@ -49,11 +49,11 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.7.0
+# Version 2.7.1
    - Added:
-      - New menu to select the TYPE.
-   - Removed:
-      - Sandbox errors when starting webdriver.
+      - When changing the Video URL inside Tiktok-Booster (when running in cmd) it'll update the config.cfg in realtime.
+   - Fixed:
+      - Fixed an unnecessary error that would cause the program to crash (Invalid Video URL).
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
