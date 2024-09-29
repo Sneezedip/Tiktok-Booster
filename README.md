@@ -49,11 +49,11 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.7.1
-   - Added:
-      - When changing the Video URL inside Tiktok-Booster (when running in cmd) it'll update the config.cfg in realtime.
+# Version 2.7.2
    - Fixed:
-      - Fixed an unnecessary error that would cause the program to crash (Invalid Video URL).
+      - Fixed white screen when running the program with headless in true.
+   - Bonus:
+      - Replaced some errors.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

@@ -143,7 +143,7 @@ class TikTokBooster:
         for option in Static.ChromeOptions:
             self.options.add_argument(option)
         if config.getboolean('Settings', 'HEADLESS'):
-            self.options.add_argument("--headless")
+            self.options.add_argument("--headless=old")
         print(f'\n{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Installing Extensions...'
               f'{Style.RESET_ALL}', end="\r")
         self.options.add_extension('Extensions/ub.crx')
@@ -351,7 +351,7 @@ class TikTokBooster:
                                   f"Program couldn't proceed. Restart the program and if the error persists, "
                                   f"please set HEADLESS to False in the config.cfg file. (ERROR 000)")
                         else:
-                            print(f"{Fore.RED}[Error] OPEN A TICKET IN DISCORD WITH THIS INFORMATION (ERROR 001)"
+                            print(f"{Fore.RED}[Error] Browser handling error, restart the program..."
                                   f"{Style.RESET_ALL}An exception occurred: {e}")
                         self.driver.refresh()
                         time.sleep(2)
@@ -527,7 +527,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.7.1")
+    check_version("2.7.2")
     show_credits()
     is_first_run()
     TikTokBooster()

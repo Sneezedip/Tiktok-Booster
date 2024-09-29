@@ -1,3 +1,9 @@
+# Version 2.7.2
+   - Fixed:
+      - Fixed white screen when running the program with headless in true.
+   - Bonus:
+      - Replaced some errors.
+      
 # Version 2.7.1
    - Added:
       - When changing the Video URL inside Tiktok-Booster (when running in cmd) it'll update the config.cfg in realtime.
