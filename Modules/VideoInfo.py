@@ -17,7 +17,7 @@ class TikTokVideoInfo:
         self.data = None
 
     def _extract_video_id(self):
-        match = re.search(r'tiktok\.com/@[^/]+/video/(\d+)', self.video_url)
+        match = re.search(r'tiktok\.com/@[^/]+/video/(\d+)', self.video_url) or re.search(r'tiktok\.com/@[^/]+/photo/(\d+)', self.video_url)
         if match:
             return match.group(1)
         else:
@@ -95,7 +95,10 @@ class TikTokVideoInfo:
                         return "Unable to gather information after multiple attempts."
 
         if Creator:
-            return re.search(r'tiktok\.com/@([^/]+)/video/', self.video_url).group(1)
+            try:
+                return re.search(r'tiktok\.com/@([^/]+)/video/', self.video_url).group(1)
+            except:
+                return re.search(r'tiktok\.com/@([^/]+)/photo/', self.video_url).group(1)
         elif Views:
             return self.data.get('video_views_count', 'View count not available')
         elif Likes:

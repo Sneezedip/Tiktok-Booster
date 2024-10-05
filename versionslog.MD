@@ -1,3 +1,7 @@
+# Version 2.7.3
+   - Fixed:
+      - Fixed not accepting photo videos.
+
 # Version 2.7.2
    - Fixed:
       - Fixed white screen when running the program with headless in true.

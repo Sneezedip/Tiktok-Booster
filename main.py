@@ -25,11 +25,9 @@ try:
     from datetime import datetime, timedelta
     from discordwebhook import Discord
     from Modules.VideoInfo import TikTokVideoInfo
-except ImportError:
-    print('Installing Libraries...')
-    os.system("pip install -r requirements.txt")
-    print('Libraries installed. Restart the program!')
-    sys.exit()
+except Exception as e:
+    print(e)
+    input()
 
 # Configurations
 config = configparser.ConfigParser()
@@ -527,7 +525,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.7.2")
+    check_version("2.7.3")
     show_credits()
     is_first_run()
     TikTokBooster()

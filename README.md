@@ -49,11 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.7.2
+# Version 2.7.3
    - Fixed:
-      - Fixed white screen when running the program with headless in true.
-   - Bonus:
-      - Replaced some errors.
+      - Fixed not accepting photo videos.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
