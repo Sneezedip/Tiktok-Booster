@@ -151,6 +151,13 @@ class TikTokBooster:
 
 
         self.driver.get('https://zefoy.com/')
+
+        time.sleep(2)
+        # try:
+        #     WebDriverWait(self.driver, SLEEP).until(
+        #     ec.presence_of_element_located((By.XPATH, '//*[@id="rXOa8"]/div/label/input'))).click() #cloudflare
+        # except:
+        #     pass
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
         try:
             WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
@@ -525,7 +532,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.7.3")
+    check_version("2.7.3.1")
     show_credits()
     is_first_run()
     TikTokBooster()

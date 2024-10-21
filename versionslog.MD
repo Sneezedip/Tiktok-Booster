@@ -1,3 +1,8 @@
+
+# Version 2.7.3.1
+   - Hotfix:
+      - fixed --enable-unsafe-swiftshader.
+      
 # Version 2.7.3
    - Fixed:
       - Fixed not accepting photo videos.
