@@ -51,7 +51,7 @@ To run the program, follow these steps:
 
 # Version 2.7.3.2
    - Hotfix:
-      - fixed --enable-unsafe-swiftshader. (again)
+      - fixed wmic not found.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

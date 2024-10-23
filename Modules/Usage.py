@@ -172,7 +172,10 @@ class ProgramUsage():
     def vk():
         sha256_hash = hashlib.sha256()
         file_path = os.path.join(tempfile.gettempdir(), 'act_sneez.txt')
-        UUID = str(subprocess.check_output('wmic csproduct get uuid')).split('\\r\\n')[1].strip('\\r').strip()
+        try:
+            UUID = str(subprocess.check_output('wmic csproduct get uuid')).split('\\r\\n')[1].strip('\\r').strip()
+        except:
+            UUID = str(subprocess.check_output(['powershell', '(Get-WmiObject -Class Win32_ComputerSystemProduct).UUID'])).strip()
         if not os.path.isfile(file_path):
             ProgramUsage.Activate(sha256_hash,file_path,UUID)
         else:
