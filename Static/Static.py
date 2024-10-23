@@ -51,4 +51,4 @@ class Static():
         'favorites' : '//*[@id="c2VuZF9mb2xsb3dlcnNfdGlrdG9L"]/div[1]/div/form/button',
         'hearts' : '//*[@id="c2VuZE9nb2xsb3dlcnNfdGlrdG9r"]/div[1]/div/form/button'
     }
-    ChromeOptions = ["--window-size=1920,1080","--disable-gpu","--incognito",f"user-agent={UserAgent().random}","--no-sandbox"]
+    ChromeOptions = ["--window-size=1920,1080","--disable-gpu","--incognito",f"user-agent={UserAgent().random}","--no-sandbox","--enable-unsafe-swiftshader"]

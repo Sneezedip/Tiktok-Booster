@@ -1,3 +1,6 @@
+# Version 2.7.3.2
+   - Hotfix:
+      - fixed --enable-unsafe-swiftshader. (again)
 
 # Version 2.7.3.1
    - Hotfix:
