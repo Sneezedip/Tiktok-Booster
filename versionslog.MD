@@ -1,3 +1,7 @@
+# Version 2.7.3.4
+   - Hotfix:
+      - Fixed ElementNotInteractableException.
+
 # Version 2.7.3.2
    - Hotfix:
       - fixed wmic not found.

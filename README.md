@@ -49,9 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.7.3.2
+# Version 2.7.3.4
    - Hotfix:
-      - fixed wmic not found.
+      - Fixed ElementNotInteractableException.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

@@ -22,6 +22,7 @@ try:
     from selenium.webdriver.support import expected_conditions as ec
     from selenium.common.exceptions import TimeoutException
     from selenium.common.exceptions import NoSuchElementException
+    from selenium.common.exceptions import ElementNotInteractableException
     from datetime import datetime, timedelta
     from discordwebhook import Discord
     from Modules.VideoInfo import TikTokVideoInfo
@@ -161,7 +162,7 @@ class TikTokBooster:
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
         try:
             WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
-                (By.XPATH, '/html/body/div[8]/div[2]/div[1]/div[3]/div[2]/button[1]'))).click()
+                (By.XPATH, '/html/body/div[8]/div[2]/div[2]/div[3]/div[2]/button[1]'))).click()
         except (TimeoutException, NoSuchElementException):
             pass
         
@@ -210,9 +211,12 @@ class TikTokBooster:
         with open('Captcha/captcha.png', 'wb') as file:
             file.write(WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
                 (By.XPATH, '/html/body/div[5]/div[2]/form/div/div/img'))).screenshot_as_png)
-        WebDriverWait(self.driver, SLEEP).until(
-            ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(
-            pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
+        try:
+            WebDriverWait(self.driver, SLEEP).until(
+                ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(
+                pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
+        except (ElementNotInteractableException):
+            self._reset_browser()
         print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}Passing Captcha.."
               f"{Style.RESET_ALL}", end="\r")
         return self._is_captcha_passed()
@@ -532,7 +536,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.7.3.3")
+    check_version("2.7.3.4")
     show_credits()
     is_first_run()
     TikTokBooster()
