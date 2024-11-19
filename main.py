@@ -124,7 +124,7 @@ class TikTokBooster:
                 print(f"\n{Fore.YELLOW}[HISTORY] Select a video:{Fore.RESET}")
                 for index, record in enumerate(self.history, start=1):
                     if isinstance(record, dict):
-                        print(f"\n{Fore.CYAN}[{index}] {Fore.WHITE}{Style.BRIGHT}Video Link: {Style.RESET_ALL}https://www.tiktok.com/@{record["creator"]}/video/ 1418{record["video_id"]}\n"
+                        print(f"\n{Fore.CYAN}[{index}] {Fore.WHITE}{Style.BRIGHT}Video Link: {Style.RESET_ALL}https://www.tiktok.com/@{record["creator"]}/video/{record["video_id"]}\n"
                             f"{Fore.WHITE}{Style.BRIGHT}Creator: {Style.RESET_ALL}{record['creator']} \n"
                             f"{Fore.WHITE}{Style.BRIGHT}Views: {Style.RESET_ALL}{Fore.LIGHTYELLOW_EX}{record['views_before']} {Fore.WHITE}-> {Fore.GREEN}{record['views_after']} {Fore.RESET}\n"
                             f"{Fore.WHITE}{Style.BRIGHT}Last Time Used: {Style.RESET_ALL}{record['last_time_used']}{Fore.RESET}")
