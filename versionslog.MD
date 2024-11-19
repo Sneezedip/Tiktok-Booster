@@ -1,3 +1,9 @@
+# Version 2.8.0
+   - Removed:
+      - Unused Exceptions
+   - Added:
+      - Added Video History.
+
 # Version 2.7.3.4
    - Hotfix:
       - Fixed ElementNotInteractableException.

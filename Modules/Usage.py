@@ -1,4 +1,5 @@
-import sys
+import json
+import sys,os
 try:
     import hashlib
     import subprocess
@@ -198,5 +199,41 @@ class ProgramUsage():
                     content.append(line)
         with open("config.cfg", "w") as file:
             file.writelines(content)
-                    
+    def save_or_replace_history(video_id, creator, views_before, views_after, likes, shares):
+        new_entry = {
+            "video_id": video_id,
+            "creator": creator,
+            "views_before": views_before,
+            "views_after": views_after,
+            "likes": likes,
+            "shares": shares,
+            "last_time_used": f"{datetime.now().year}/{datetime.now().month}/{datetime.now().day}"
+        }
 
+        try:
+            with open("history.json", "r") as file:
+                history_data = json.load(file)
+        except FileNotFoundError:
+            history_data = {"history": []}
+
+        for i, entry in enumerate(history_data["history"]):
+            if entry["video_id"] == video_id:
+                history_data["history"][i] = new_entry
+                break
+        else:
+            history_data["history"].append(new_entry)
+
+        with open("history.json", "w") as file:
+            json.dump(history_data, file, indent=4)
+    
+    def get_history():
+        history = []
+        try:
+            with open("history.json", "r") as file:
+                history_data = json.load(file)
+        except FileNotFoundError:
+            return None
+        for info in history_data["history"]:
+            history.append(info)
+        return history if len(history) > 0 else None
+    

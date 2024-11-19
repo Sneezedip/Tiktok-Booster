@@ -8,6 +8,7 @@ import webbrowser
 from Static.Static import Static
 from Modules.Usage import ProgramUsage
 from Modules.BannersHandler import Handler
+from Static.InitialInfo import InitialInfo
 try:
     import requests
     from tqdm import tqdm
@@ -110,10 +111,36 @@ if not os.path.exists('Tesseract'):
 
 class TikTokBooster:
     def __init__(self):
+        self.selected_video_history = {}
         global VIDEO
         if ProgramUsage.vk():
             pass
         self.elements = []
+        while True:
+            self.history = ProgramUsage.get_history()
+            if not self.history:
+                break
+            else:
+                print(f"\n{Fore.YELLOW}[HISTORY] Select a video:{Fore.RESET}")
+                for index, record in enumerate(self.history, start=1):
+                    if isinstance(record, dict):
+                        print(f"\n{Fore.CYAN}[{index}] {Fore.WHITE}{Style.BRIGHT}Video Link: {Style.RESET_ALL}https://www.tiktok.com/@{record["creator"]}/video/ 1418{record["video_id"]}\n"
+                            f"{Fore.WHITE}{Style.BRIGHT}Creator: {Style.RESET_ALL}{record['creator']} \n"
+                            f"{Fore.WHITE}{Style.BRIGHT}Views: {Style.RESET_ALL}{Fore.LIGHTYELLOW_EX}{record['views_before']} {Fore.WHITE}-> {Fore.GREEN}{record['views_after']} {Fore.RESET}\n"
+                            f"{Fore.WHITE}{Style.BRIGHT}Last Time Used: {Style.RESET_ALL}{record['last_time_used']}{Fore.RESET}")
+                        
+                try:
+                    choice = int(input(f"\nEnter the number of the video you want to select {Fore.RED}(or 0 for a new one): "))
+                    if choice == 0:
+                        VIDEO = ""
+                        break
+                    if 1 <= choice <= len(self.history):
+                        VIDEO = f"https://www.tiktok.com/@{self.history[choice - 1]["creator"]}/video/{self.history[choice - 1]["video_id"]}"
+                        break
+                    else:
+                        print("[ERROR] Invalid choice.")
+                except ValueError:
+                    print("[ERROR] Invalid input.")
         while True:
             try:
                 self.tiktok_info = TikTokVideoInfo(VIDEO)
@@ -169,7 +196,7 @@ class TikTokBooster:
         try:
             self.webhook.post(content="Tiktok-Booster Started!") # Quick check on webhook
             self.is_webhook_valid = True    
-        except (TimeoutException, NoSuchElementException):
+        except (TimeoutException):
             self.is_webhook_valid = False
 
         while not self._handle_captcha():
@@ -449,7 +476,8 @@ class TikTokBooster:
                     return self.tiktok_info.get_video_info(Creator=True)
             except ValueError:
                 return 0
-
+        InitialInfo.CREATOR = self.tiktok_info.get_video_info(Creator=True)
+        InitialInfo.VIEWS_BEFORE = self.tiktok_info.get_video_info(Views=True)
         Handler.info_banner(_gather_info('views'),_gather_info('shares'),_gather_info('likes'),AMOUNT,INFO,_gather_info('creator'),TYPE) # Show Info Banner
 
         while True:
@@ -462,6 +490,7 @@ class TikTokBooster:
     def _show_banner(self, index):
         """Show the progress banner"""
         temp = TikTokVideoInfo(VIDEO)
+        ProgramUsage.save_or_replace_history(self.video_id,InitialInfo.CREATOR,InitialInfo.VIEWS_BEFORE,ProgramUsage.get_numeric_value(temp.get_video_info(Views=True)),ProgramUsage.get_numeric_value(temp.get_video_info(Likes=True)),ProgramUsage.get_numeric_value(temp.get_video_info(Shares=True)))
         if TYPE == 'views':
             views = ProgramUsage.get_numeric_value(temp.get_video_info(Views=True))
             print(f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Views : {Fore.WHITE}{views} {Fore.GREEN}[+{int(views - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {ProgramUsage.convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
@@ -536,7 +565,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.7.3.4")
+    check_version("2.8.0")
     show_credits()
     is_first_run()
     TikTokBooster()
