@@ -11,6 +11,7 @@ try:
     import colorama
     from tqdm import tqdm
     import tempfile
+    import uuid
 except ImportError:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -156,39 +157,40 @@ class ProgramUsage():
             f' Downloaded and Extracted Successfully!{Style.RESET_ALL}')
         print(f'{WARNING}{Fore.WHITE}Please Restart the program!{Style.RESET_ALL}')
     def Activate(sha256_hash,file_path,UUID):
-        response = requests.get(f"https://sneezedip.pythonanywhere.com/get_key?uuid={UUID.split("-")[4]}").json()
+        response = requests.get(f"https://sneezedip.pythonanywhere.com/get_key?uuid={UUID}").json()
         print(f'{Fore.RED} Program not Activated.')
         print(f'''{Fore.CYAN} This program is free of use, but you need an activation key to continue!\n
             Please join the discord and go to the \'get-key\' channel and insert this command{Style.RESET_ALL}''')
         print(f'/activate {response['response']}')
         while True:
             activation = input(f"{Fore.YELLOW}[Waiting] {Fore.WHITE}Please enter Activation Key >>> ")
-            response = requests.get(f"https://sneezedip.pythonanywhere.com/validate_activation?uuid={UUID.split("-")[4]}&key={activation}")
-            if 'Valid' in response.json()['response']:
+            response = requests.get(f"https://sneezedip.pythonanywhere.com/validate_activation?uuid={UUID}&key={activation}")
+            if 'Valid Key!' in response.json()['response']:
                 print('Activating the program.')
-                sha256_hash.update(activation.encode('utf-8'))
+                # sha256_hash.update(activation.encode('utf-8'))
                 with open(file_path,"w")as file:
-                    file.write(sha256_hash.hexdigest())
+                    file.write(activation)
                 return True  
     def vk():
         sha256_hash = hashlib.sha256()
         file_path = os.path.join(tempfile.gettempdir(), 'act_sneez.txt')
         try:
-            UUID = str(subprocess.check_output('wmic csproduct get uuid')).split('\\r\\n')[1].strip('\\r').strip()
+            UUID = uuid.getnode()
         except:
-            UUID = str(subprocess.check_output(['powershell', '(Get-WmiObject -Class Win32_ComputerSystemProduct).UUID'])).strip()
+            return True
         if not os.path.isfile(file_path):
             ProgramUsage.Activate(sha256_hash,file_path,UUID)
         else:
             with open(file_path,"r")as file:
-                response = requests.get(f"https://sneezedip.pythonanywhere.com/compare?uuid={UUID.split("-")[4]}&rk={file.read()}")
+                key = file.read()
+                response = requests.get(f"https://sneezedip.pythonanywhere.com/compare?uuid={UUID}&rk={key}")
                 try:
-                    if 'valid' in response.json()['response']:
+                    if not 'invalid' in response.json()['response']:
                         return True
+                    else:
+                        ProgramUsage.Activate(sha256_hash,file_path,UUID)
                 except:
                     ProgramUsage.Activate(sha256_hash,file_path,UUID)     
-                else: 
-                    ProgramUsage.Activate(sha256_hash,file_path,UUID)       
     def change_video_url(new_url):
         content = []
         with open("config.cfg", "r") as file:

@@ -49,11 +49,11 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.8.0
-   - Removed:
-      - Unused Exceptions
-   - Added:
-      - Added Video History.
+# Version 2.8.1
+   - Fixed:
+      - Key generation issue with wmic. (every key was revoked)
+      - Fixed another key issue.
+      - Fixed Blacklist Issue.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

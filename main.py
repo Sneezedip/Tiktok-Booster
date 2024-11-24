@@ -27,6 +27,7 @@ try:
     from datetime import datetime, timedelta
     from discordwebhook import Discord
     from Modules.VideoInfo import TikTokVideoInfo
+    import uuid
 except Exception as e:
     print(e)
     input()
@@ -565,7 +566,7 @@ if __name__ == "__main__":
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.8.0")
+    check_version("2.8.1")
     show_credits()
     is_first_run()
     TikTokBooster()
