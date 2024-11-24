@@ -563,10 +563,10 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
+    check_version("2.8.1.1")
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")
-    check_version("2.8.1")
     show_credits()
     is_first_run()
     TikTokBooster()

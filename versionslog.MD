@@ -1,3 +1,13 @@
+# Version 2.8.1.1
+   - Fixed:
+      - Minifix for update.
+
+# Version 2.8.1
+   - Fixed:
+      - Key generation issue with wmic. (every key was revoked)
+      - Fixed another key issue.
+      - Fixed Blacklist Issue.
+
 # Version 2.8.0
    - Removed:
       - Unused Exceptions
