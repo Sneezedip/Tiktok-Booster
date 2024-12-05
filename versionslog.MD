@@ -1,3 +1,14 @@
+# Version 2.9.0
+   -  Removed:
+         Unused code.
+         uBlock Origin Extension.
+         Error message displayed when not selecting a history video.
+   -  Added:
+         New discord invite link
+         TRANSLATIONS - beta !! (en,pt)
+   -  Fixed:
+         Some Color Resets
+
 # Version 2.8.1.1
    - Fixed:
       - Minifix for update.

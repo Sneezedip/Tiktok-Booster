@@ -49,9 +49,17 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.8.1.1
-   - Fixed:
-      - Minifix for update.
+# Version 2.9.0
+   -  Removed:
+         Unused code.
+         uBlock Origin Extension.
+         Error message displayed when not selecting a history video.
+   -  Added:
+         New discord invite link
+         TRANSLATIONS - beta !! (en,pt)
+   -  Fixed:
+         Some Color Resets
+
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

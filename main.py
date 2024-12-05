@@ -60,16 +60,16 @@ def  is_first_run():
         with open(file_path, "w") as file:
             file.write("Don't Worry, this isn't a virus, just a check to see if it's your first time. :)")
         print(f"{INFO}First Time Detected. Welcome! (This won't appear anymore){Style.RESET_ALL}")
-        webbrowser.open("https://discord.gg/nAa5PyxubF")
+        webbrowser.open("https://discord.gg/sneez")
     if ProgramUsage.vk():
         pass
 
 
 def show_credits():
     """Display program credits"""
-    print(f"{INFO}{Fore.BLUE}Provided to you by {Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
-    print(f"{INFO}{Fore.BLUE}Join Our Discord For More Tools! {Fore.GREEN}"
-          f"https://discord.gg/nAa5PyxubF{Style.RESET_ALL}")
+    print(f"{INFO}{Fore.BLUE}{ProgramUsage.Translations("credits",0)}{Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
+    print(f"{INFO}{Fore.BLUE}{ProgramUsage.Translations("credits",1)}{Fore.GREEN}"
+          f"https://discord.gg/sneez{Style.RESET_ALL}")
 
 
 def parse_cooldown(text):
@@ -95,7 +95,7 @@ def check_version(current_version):
     if response.text.strip() != current_version:
         while True:
             u = input(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}{Fore.WHITE}"
-                      f"NEW VERSION FOUND. Want to update? (y/n){Style.RESET_ALL}").lower()
+                      f"{ProgramUsage.Translations("updates",0)}{Style.RESET_ALL}").lower()
             if u == "y":
                 ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,"https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main", "./")
                 sys.exit()
@@ -104,7 +104,7 @@ def check_version(current_version):
 
 
 if not os.path.exists('Tesseract'):
-    print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait..{Style.RESET_ALL}', end="\r")
+    print(f'{INFO}{Fore.WHITE}{ProgramUsage.Translations("credits",1)}{Style.RESET_ALL}', end="\r")
     url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'
     extract_to = './'
     ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,url, extract_to)
@@ -112,7 +112,7 @@ if not os.path.exists('Tesseract'):
 
 class TikTokBooster:
     def __init__(self):
-        self.selected_video_history = {}
+        self.history_selected = None
         global VIDEO
         if ProgramUsage.vk():
             pass
@@ -122,7 +122,7 @@ class TikTokBooster:
             if not self.history:
                 break
             else:
-                print(f"\n{Fore.YELLOW}[HISTORY] Select a video:{Fore.RESET}")
+                print(f"\n{Fore.YELLOW}{ProgramUsage.Translations("history",0)}{Fore.RESET}")
                 for index, record in enumerate(self.history, start=1):
                     if isinstance(record, dict):
                         print(f"\n{Fore.CYAN}[{index}] {Fore.WHITE}{Style.BRIGHT}Video Link: {Style.RESET_ALL}https://www.tiktok.com/@{record["creator"]}/video/{record["video_id"]}\n"
@@ -131,17 +131,19 @@ class TikTokBooster:
                             f"{Fore.WHITE}{Style.BRIGHT}Last Time Used: {Style.RESET_ALL}{record['last_time_used']}{Fore.RESET}")
                         
                 try:
-                    choice = int(input(f"\nEnter the number of the video you want to select {Fore.RED}(or 0 for a new one): "))
+                    choice = int(input(f"\n{ProgramUsage.Translations("history",1)}{Fore.RED} {ProgramUsage.Translations("history",2)} {Style.RESET_ALL}"))
                     if choice == 0:
+                        self.history_selected = False
                         VIDEO = ""
                         break
                     if 1 <= choice <= len(self.history):
+                        self.history_selected = True
                         VIDEO = f"https://www.tiktok.com/@{self.history[choice - 1]["creator"]}/video/{self.history[choice - 1]["video_id"]}"
                         break
                     else:
-                        print("[ERROR] Invalid choice.")
+                        print(f"{ProgramUsage.Translations("errors",0)}")
                 except ValueError:
-                    print("[ERROR] Invalid input.")
+                    print(f"{ProgramUsage.Translations("errors",1)}")
         while True:
             try:
                 self.tiktok_info = TikTokVideoInfo(VIDEO)
@@ -149,8 +151,9 @@ class TikTokBooster:
                 break
             except ValueError:
                 os.system("cls") if os.name == 'nt' else os.system("clear")
-                print(f"{WARNING}Invalid Video URL. Please Change It{Fore.BLUE}\nOLD URL : {Fore.WHITE}{VIDEO}")
-                VIDEO = input(f"{Fore.BLUE}Insert New -> {Fore.WHITE}")
+                if self.history_selected == None:
+                    print(f"{WARNING}{ProgramUsage.Translations("errors",2)}{Fore.BLUE}\nOLD URL : {Fore.WHITE}{VIDEO}")
+                VIDEO = input(f"{Fore.BLUE}{ProgramUsage.Translations("errors",3)}{Fore.WHITE}")
         self.counter = 0
         self.webhook = WEBHOOK
         self.webhook_text = WEBHOOK
@@ -171,22 +174,14 @@ class TikTokBooster:
             self.options.add_argument(option)
         if config.getboolean('Settings', 'HEADLESS'):
             self.options.add_argument("--headless=old")
-        print(f'\n{datetime.now().strftime("%H:%M:%S")} {WAITING}{Fore.WHITE}Installing Extensions...'
-              f'{Style.RESET_ALL}', end="\r")
-        self.options.add_extension('Extensions/ub.crx')
-        print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}Extensions Installed Successfully!"
-              f"{Style.RESET_ALL}")
+
         self.driver = webdriver.Chrome(options=self.options)
 
 
         self.driver.get('https://zefoy.com/')
 
         time.sleep(2)
-        # try:
-        #     WebDriverWait(self.driver, SLEEP).until(
-        #     ec.presence_of_element_located((By.XPATH, '//*[@id="rXOa8"]/div/label/input'))).click() #cloudflare
-        # except:
-        #     pass
+
         pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
         try:
             WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
@@ -245,7 +240,7 @@ class TikTokBooster:
                 pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
         except (ElementNotInteractableException):
             self._reset_browser()
-        print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}Passing Captcha.."
+        print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}{ProgramUsage.Translations("main",0)}"
               f"{Style.RESET_ALL}", end="\r")
         return self._is_captcha_passed()
 
@@ -338,7 +333,7 @@ class TikTokBooster:
                                 while total_seconds > 0:
                                     minutes, seconds = divmod(total_seconds, 60)
                                     print(
-                                        f"\r{WAITING} Waiting {minutes} minute(s) {seconds} second(s) before boosting! "
+                                        f"\r{WAITING} {ProgramUsage.Translations("main",1)} {minutes} {ProgramUsage.Translations("main",2)} {seconds} {ProgramUsage.Translations("main",3)} "
                                         f"{Style.RESET_ALL}", end='')
                                     time.sleep(1)
                                     total_seconds -= 1
@@ -359,21 +354,21 @@ class TikTokBooster:
 
                         if TYPE == 'views':
                             print(
-                                f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+1000 Views Added Successfully!"
+                                f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}{ProgramUsage.Translations("main",4)}"
                                 f"{Style.RESET_ALL}")
                             self.counter += 1000
                         elif TYPE == 'shares':
                             print(
-                                f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+50 Shares Added Successfully!"
+                                f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}{ProgramUsage.Translations("main",5)}"
                                 f"{Style.RESET_ALL}")
                             self.counter += 50
                         elif TYPE == 'favorites':
-                            print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+100 Favorites Added Successfully!"
+                            print(f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}{ProgramUsage.Translations("main",6)}"
                                 f"{Style.RESET_ALL}")
                             self.counter += 100
                         elif TYPE == 'hearts':
                             print(
-                                f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}+10 Hearts Added Successfully!"
+                                f"{datetime.now().strftime('%H:%M:%S')} {SUCCESS}{Fore.WHITE}{ProgramUsage.Translations("main",7)}"
                                 f"{Style.RESET_ALL}")
                             self.counter += 10
 
@@ -422,16 +417,16 @@ class TikTokBooster:
         """Show the program configuration menu"""
         os.system("cls") if os.name == 'nt' else os.system("clear")
         print("Type Configuration : \n")
-        print(f"{available_color('views')}[{'1' if available_color('views') == Fore.GREEN else '-'}] {'Views'} {'[SELECTED]' if TYPE.lower() == 'views' else ''}")
-        print(f"{available_color('followers')}[{'2' if available_color('followers') == Fore.GREEN else '-'}] {'Followers'} {'[SELECTED]' if TYPE.lower() == 'followers' else ''}")
-        print(f"{available_color('favorites')}[{'3' if available_color('favorites') == Fore.GREEN else '-'}] {'Favorites'} {'[SELECTED]' if TYPE.lower() == 'favorites' else ''}")
-        print(f"{available_color('shares')}[{'4' if available_color('shares') == Fore.GREEN else '-'}] {'Shares'} {'[SELECTED]' if TYPE.lower() == 'shares' else ''}")
-        print(f"{available_color('hearts')}[{'5' if available_color('hearts') == Fore.GREEN else '-'}] {'Hearts'} {'[SELECTED]' if TYPE.lower() == 'hearts' else ''}")
-        print(Fore.CYAN,"\n[99] - Start!",Style.RESET_ALL)
+        print(f"{available_color('views')}[{'1' if available_color('views') == Fore.GREEN else '-'}] {'Views'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'views' else ''}")
+        print(f"{available_color('followers')}[{'2' if available_color('followers') == Fore.GREEN else '-'}] {'Followers'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'followers' else ''}")
+        print(f"{available_color('favorites')}[{'3' if available_color('favorites') == Fore.GREEN else '-'}] {'Favorites'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'favorites' else ''}")
+        print(f"{available_color('shares')}[{'4' if available_color('shares') == Fore.GREEN else '-'}] {'Shares'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'shares' else ''}")
+        print(f"{available_color('hearts')}[{'5' if available_color('hearts') == Fore.GREEN else '-'}] {'Hearts'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'hearts' else ''}")
+        print(Fore.CYAN,f"\n[99] - {ProgramUsage.Translations("main",8)}!",Style.RESET_ALL)
         print("\n")
         while True:
             try:
-                us = int(input(f"{WAITING}Select an option! \n-> {Style.RESET_ALL}").lower())
+                us = int(input(f"{WAITING}Select an option \n-> {Style.RESET_ALL}").lower())
                 if us >= 1 and us <= 99:
                     if us >= 6 and us <= 98:
                         pass
@@ -563,7 +558,7 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.8.1.1")
+    check_version("2.9.0")
     if ProgramUsage.vk():
         pass
     os.system("cls") if os.name == 'nt' else os.system("clear")

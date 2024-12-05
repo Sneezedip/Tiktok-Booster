@@ -1,5 +1,6 @@
 import json
 import sys,os
+import configparser
 try:
     import hashlib
     import subprocess
@@ -231,11 +232,30 @@ class ProgramUsage():
     def get_history():
         history = []
         try:
-            with open("history.json", "r") as file:
+            with open("history.json", "r", encoding="utf-8") as file:
                 history_data = json.load(file)
         except FileNotFoundError:
             return None
         for info in history_data["history"]:
             history.append(info)
         return history if len(history) > 0 else None
-    
+                
+    def Translations(section,id):
+        config = configparser.ConfigParser()
+        config.read('config.cfg')
+        with open("languages.json" , "r", encoding="utf-8") as file:
+            json_data = file.read()
+        data = json.loads(json_data)
+        translation_language = data["translations"][config.get('Settings', 'LANGUAGE')]
+        credits = translation_language[0]["credits"]
+        updates = translation_language[0]["updates"]
+        history = translation_language[0]["history"]
+        errors = translation_language[0]["errors"]
+        main = translation_language[0]["main"]
+        match section:
+            case "credits": return next(item["text"] for item in credits if item["id"] == id) 
+            case "updates": return next(item["text"] for item in updates if item["id"] == id) 
+            case "history": return next(item["text"] for item in history if item["id"] == id) 
+            case "errors": return next(item["text"] for item in errors if item["id"] == id) 
+            case "main": return next(item["text"] for item in main if item["id"] == id) 
+
