@@ -1,3 +1,11 @@
+# Version 2.9.1
+   -  Contribution by rowan0881:
+      New Language! (Dutch)
+   -  Added:
+      More Languages! (French, Spanish, German, Italian, Russian, Arabic, Japanese )
+   Info : 
+      Not every phrase is translated, doing it in the future...
+
 # Version 2.9.0
    -  Removed:
          Unused code.

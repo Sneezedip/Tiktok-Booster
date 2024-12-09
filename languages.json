@@ -194,6 +194,692 @@
             }
         ]
     }
-    ]
+    ],
+    "nl" : [
+        {
+            "credits":[
+                {
+                    "id" : 0,
+                    "text" : "Gemaakt door "
+                },
+                {
+                    "id" : 1,
+                    "text" : "Word lid van onze discord voor meer handige tools! "
+                }
+            ],
+            "updates":[
+                {
+                    "id": 0,
+                    "text" : "NIEUWE VERSIE GEVONDEN. Wil je updaten? (y/n)"
+                },
+                {
+                    "id": 1,
+                    "text" : "Downloading Tesseract, een moment geduld alsjeblieft.."
+                }
+            ],
+            "history":[
+                {
+                    "id": 0,
+                    "text" : "[HISTORIE] Selecteer een video:"
+                },
+                {
+                    "id": 1,
+                    "text" : "Voer het nummer van de video in die je wil selecteren"
+                },
+                {
+                    "id": 2,
+                    "text" : "(of 0 voor een nieuwe video): "
+                }
+            ],
+            "errors":[
+                {
+                    "id": 0,
+                    "text" : "[FOUT] Ongeldige keuze."
+                },
+                {
+                    "id": 1,
+                    "text" : "[FOUT] Ongeldige invoer."
+                },
+                {
+                    "id" : 2,
+                    "text":"Ongeldige video link. Voer een geldige URL in."
+                },
+                {
+                    "id":3,
+                    "text":"Voeg een nieuwe URL toe -> "
+                }
+            ],
+            "main":[
+                {
+                    "id": 0,
+                    "text" : "Bezig met de CAPTCHA.."
+                },
+                {
+                    "id": 1,
+                    "text" : "We moeten nog "
+                },
+                {
+                    "id": 2,
+                    "text" : "minu(u)te(n)"
+                },
+                {
+                    "id": 3,
+                    "text" : "seconde(s) wachten tot de volgende boost! "
+                },
+                {
+                    "id": 4,
+                    "text" : "+1000 views zijn toegevoegd aan je video!"
+                },
+                {
+                    "id": 5,
+                    "text" : "+50 Shares zijn toegevoegd aan je video!"
+                },
+                {
+                    "id": 6,
+                    "text" : "+100 Favorites zijn toegevoegd aan je video!"
+                },
+                {
+                    "id": 7,
+                    "text" : "+10 Hearts zijn toegevoegd aan je video!"
+                },
+                {
+                    "id": 8,
+                    "text" : "Start!"
+                },
+                {
+                    "id": 9,
+                    "text" : "GESELECTEERD"
+                }
+            ]
+        }
+    ],
+    "fr": [
+    {
+        "credits": [
+            {
+                "id": 0,
+                "text": "Créé par "
+            },
+            {
+                "id": 1,
+                "text": "Rejoignez notre Discord pour plus d'outils utiles ! "
+            }
+        ],
+        "updates": [
+            {
+                "id": 0,
+                "text": "NOUVELLE VERSION TROUVÉE. Voulez-vous mettre à jour ? (o/n)"
+            },
+            {
+                "id": 1,
+                "text": "Téléchargement de Tesseract, veuillez patienter un moment..."
+            }
+        ],
+        "history": [
+            {
+                "id": 0,
+                "text": "[HISTORIQUE] Sélectionnez une vidéo :"
+            },
+            {
+                "id": 1,
+                "text": "Entrez le numéro de la vidéo que vous souhaitez sélectionner"
+            },
+            {
+                "id": 2,
+                "text": "(ou 0 pour une nouvelle vidéo) : "
+            }
+        ],
+        "errors": [
+            {
+                "id": 0,
+                "text": "[ERREUR] Choix invalide."
+            },
+            {
+                "id": 1,
+                "text": "[ERREUR] Entrée invalide."
+            },
+            {
+                "id": 2,
+                "text": "Lien vidéo invalide. Veuillez entrer une URL valide."
+            },
+            {
+                "id": 3,
+                "text": "Ajoutez une nouvelle URL -> "
+            }
+        ],
+        "main": [
+            {
+                "id": 0,
+                "text": "Résolution du CAPTCHA..."
+            },
+            {
+                "id": 1,
+                "text": "Il reste encore "
+            },
+            {
+                "id": 2,
+                "text": "minute(s)"
+            },
+            {
+                "id": 3,
+                "text": "seconde(s) avant le prochain boost ! "
+            },
+            {
+                "id": 4,
+                "text": "+1000 vues ont été ajoutées à votre vidéo !"
+            },
+            {
+                "id": 5,
+                "text": "+50 partages ont été ajoutés à votre vidéo !"
+            },
+            {
+                "id": 6,
+                "text": "+100 favoris ont été ajoutés à votre vidéo !"
+            },
+            {
+                "id": 7,
+                "text": "+10 cœurs ont été ajoutés à votre vidéo !"
+            },
+            {
+                "id": 8,
+                "text": "Commencer !"
+            },
+            {
+                "id": 9,
+                "text": "SÉLECTIONNÉ"
+            }
+        ]
+    }
+    ],
+    "es": [
+    {
+        "credits": [
+            {
+                "id": 0,
+                "text": "Creado por "
+            },
+            {
+                "id": 1,
+                "text": "¡Únete a nuestro Discord para más herramientas útiles! "
+            }
+        ],
+        "updates": [
+            {
+                "id": 0,
+                "text": "NUEVA VERSIÓN ENCONTRADA. ¿Quieres actualizar? (s/n)"
+            },
+            {
+                "id": 1,
+                "text": "Descargando Tesseract, por favor espera un momento..."
+            }
+        ],
+        "history": [
+            {
+                "id": 0,
+                "text": "[HISTORIAL] Selecciona un video:"
+            },
+            {
+                "id": 1,
+                "text": "Ingresa el número del video que deseas seleccionar"
+            },
+            {
+                "id": 2,
+                "text": "(o 0 para un nuevo video): "
+            }
+        ],
+        "errors": [
+            {
+                "id": 0,
+                "text": "[ERROR] Elección inválida."
+            },
+            {
+                "id": 1,
+                "text": "[ERROR] Entrada inválida."
+            },
+            {
+                "id": 2,
+                "text": "Enlace de video no válido. Ingresa una URL válida."
+            },
+            {
+                "id": 3,
+                "text": "Agrega una nueva URL -> "
+            }
+        ],
+        "main": [
+            {
+                "id": 0,
+                "text": "Resolviendo el CAPTCHA..."
+            },
+            {
+                "id": 1,
+                "text": "Todavía quedan "
+            },
+            {
+                "id": 2,
+                "text": "minuto(s)"
+            },
+            {
+                "id": 3,
+                "text": "segundo(s) hasta el próximo impulso! "
+            },
+            {
+                "id": 4,
+                "text": "¡+1000 vistas han sido añadidas a tu video!"
+            },
+            {
+                "id": 5,
+                "text": "¡+50 Compartidos han sido añadidos a tu video!"
+            },
+            {
+                "id": 6,
+                "text": "¡+100 Favoritos han sido añadidos a tu video!"
+            },
+            {
+                "id": 7,
+                "text": "¡+10 Corazones han sido añadidos a tu video!"
+            },
+            {
+                "id": 8,
+                "text": "¡Empezar!"
+            },
+            {
+                "id": 9,
+                "text": "SELECCIONADO"
+            }
+        ]
+    }
+    ],
+    "de": [
+    {
+        "credits": [
+            {
+                "id": 0,
+                "text": "Erstellt von "
+            },
+            {
+                "id": 1,
+                "text": "Tritt unserem Discord bei für weitere nützliche Tools! "
+            }
+        ],
+        "updates": [
+            {
+                "id": 0,
+                "text": "NEUE VERSION GEFUNDEN. Möchten Sie aktualisieren? (j/n)"
+            },
+            {
+                "id": 1,
+                "text": "Tesseract wird heruntergeladen, bitte einen Moment Geduld..."
+            }
+        ],
+        "history": [
+            {
+                "id": 0,
+                "text": "[VERLAUF] Wählen Sie ein Video aus:"
+            },
+            {
+                "id": 1,
+                "text": "Geben Sie die Nummer des Videos ein, das Sie auswählen möchten"
+            },
+            {
+                "id": 2,
+                "text": "(oder 0 für ein neues Video): "
+            }
+        ],
+        "errors": [
+            {
+                "id": 0,
+                "text": "[FEHLER] Ungültige Auswahl."
+            },
+            {
+                "id": 1,
+                "text": "[FEHLER] Ungültige Eingabe."
+            },
+            {
+                "id": 2,
+                "text": "Ungültiger Videolink. Bitte geben Sie eine gültige URL ein."
+            },
+            {
+                "id": 3,
+                "text": "Fügen Sie eine neue URL hinzu -> "
+            }
+        ],
+        "main": [
+            {
+                "id": 0,
+                "text": "Lösen des CAPTCHA..."
+            },
+            {
+                "id": 1,
+                "text": "Es verbleiben noch "
+            },
+            {
+                "id": 2,
+                "text": "Minute(n)"
+            },
+            {
+                "id": 3,
+                "text": "Sekunde(n) bis zum nächsten Boost! "
+            },
+            {
+                "id": 4,
+                "text": "+1000 Aufrufe wurden zu Ihrem Video hinzugefügt!"
+            },
+            {
+                "id": 5,
+                "text": "+50 Shares wurden zu Ihrem Video hinzugefügt!"
+            },
+            {
+                "id": 6,
+                "text": "+100 Favoriten wurden zu Ihrem Video hinzugefügt!"
+            },
+            {
+                "id": 7,
+                "text": "+10 Herzen wurden zu Ihrem Video hinzugefügt!"
+            },
+            {
+                "id": 8,
+                "text": "Start!"
+            },
+            {
+                "id": 9,
+                "text": "AUSGEWÄHLT"
+            }
+        ]
+    }
+    ],
+    "ru": [
+    {
+        "credits": [
+            {
+                "id": 0,
+                "text": "Создано "
+            },
+            {
+                "id": 1,
+                "text": "Присоединяйтесь к нашему Discord для получения полезных инструментов! "
+            }
+        ],
+        "updates": [
+            {
+                "id": 0,
+                "text": "НАЙДЕНА НОВАЯ ВЕРСИЯ. Хотите обновить? (д/н)"
+            },
+            {
+                "id": 1,
+                "text": "Скачивание Tesseract, пожалуйста, подождите..."
+            }
+        ],
+        "history": [
+            {
+                "id": 0,
+                "text": "[ИСТОРИЯ] Выберите видео:"
+            },
+            {
+                "id": 1,
+                "text": "Введите номер видео, которое хотите выбрать"
+            },
+            {
+                "id": 2,
+                "text": "(или 0 для нового видео): "
+            }
+        ],
+        "errors": [
+            {
+                "id": 0,
+                "text": "[ОШИБКА] Неверный выбор."
+            },
+            {
+                "id": 1,
+                "text": "[ОШИБКА] Неверный ввод."
+            },
+            {
+                "id": 2,
+                "text": "Неверная ссылка на видео. Пожалуйста, введите действительный URL."
+            },
+            {
+                "id": 3,
+                "text": "Добавьте новый URL -> "
+            }
+        ],
+        "main": [
+            {
+                "id": 0,
+                "text": "Решение CAPTCHA..."
+            },
+            {
+                "id": 1,
+                "text": "Осталось еще "
+            },
+            {
+                "id": 2,
+                "text": "минута(ы)"
+            },
+            {
+                "id": 3,
+                "text": "секунда(ы) до следующего буста! "
+            },
+            {
+                "id": 4,
+                "text": "+1000 просмотров добавлено к вашему видео!"
+            },
+            {
+                "id": 5,
+                "text": "+50 Поделились добавлено к вашему видео!"
+            },
+            {
+                "id": 6,
+                "text": "+100 Избранное добавлено к вашему видео!"
+            },
+            {
+                "id": 7,
+                "text": "+10 Сердец добавлено к вашему видео!"
+            },
+            {
+                "id": 8,
+                "text": "Начать!"
+            },
+            {
+                "id": 9,
+                "text": "ВЫБРАНО"
+            }
+        ]
+    }
+],
+"ar": [
+    {
+        "credits": [
+            {
+                "id": 0,
+                "text": "صنع بواسطة "
+            },
+            {
+                "id": 1,
+                "text": "انضم إلى خادمنا على ديسكورد للحصول على المزيد من الأدوات المفيدة! "
+            }
+        ],
+        "updates": [
+            {
+                "id": 0,
+                "text": "تم العثور على إصدار جديد. هل تريد التحديث؟ (ن/لا)"
+            },
+            {
+                "id": 1,
+                "text": "جارٍ تنزيل Tesseract، يرجى الانتظار قليلاً..."
+            }
+        ],
+        "history": [
+            {
+                "id": 0,
+                "text": "[السجل] اختر فيديو:"
+            },
+            {
+                "id": 1,
+                "text": "أدخل رقم الفيديو الذي تريد اختياره"
+            },
+            {
+                "id": 2,
+                "text": "(أو 0 لفيديو جديد): "
+            }
+        ],
+        "errors": [
+            {
+                "id": 0,
+                "text": "[خطأ] اختيار غير صالح."
+            },
+            {
+                "id": 1,
+                "text": "[خطأ] إدخال غير صالح."
+            },
+            {
+                "id": 2,
+                "text": "رابط الفيديو غير صالح. يرجى إدخال رابط URL صالح."
+            },
+            {
+                "id": 3,
+                "text": "أضف رابط URL جديد -> "
+            }
+        ],
+        "main": [
+            {
+                "id": 0,
+                "text": "جارٍ حل CAPTCHA..."
+            },
+            {
+                "id": 1,
+                "text": "لا يزال لدينا "
+            },
+            {
+                "id": 2,
+                "text": "دقيقة/دقائق"
+            },
+            {
+                "id": 3,
+                "text": "ثانية/ثوانٍ للانتظار حتى التعزيز التالي! "
+            },
+            {
+                "id": 4,
+                "text": "+1000 مشاهدة تمت إضافتها إلى الفيديو الخاص بك!"
+            },
+            {
+                "id": 5,
+                "text": "+50 مشاركة تمت إضافتها إلى الفيديو الخاص بك!"
+            },
+            {
+                "id": 6,
+                "text": "+100 مفضلة تمت إضافتها إلى الفيديو الخاص بك!"
+            },
+            {
+                "id": 7,
+                "text": "+10 قلوب تمت إضافتها إلى الفيديو الخاص بك!"
+            },
+            {
+                "id": 8,
+                "text": "ابدأ!"
+            },
+            {
+                "id": 9,
+                "text": "تم الاختيار"
+            }
+        ]
+    }
+],
+"ja": [
+    {
+        "credits": [
+            {
+                "id": 0,
+                "text": "作成者: "
+            },
+            {
+                "id": 1,
+                "text": "便利なツールをもっと使うために、私たちのDiscordに参加してください！ "
+            }
+        ],
+        "updates": [
+            {
+                "id": 0,
+                "text": "新しいバージョンが見つかりました。更新しますか？ (y/n)"
+            },
+            {
+                "id": 1,
+                "text": "Tesseractをダウンロード中です。しばらくお待ちください..."
+            }
+        ],
+        "history": [
+            {
+                "id": 0,
+                "text": "[履歴] 動画を選択してください:"
+            },
+            {
+                "id": 1,
+                "text": "選択したい動画の番号を入力してください"
+            },
+            {
+                "id": 2,
+                "text": "(または新しい動画の場合は0): "
+            }
+        ],
+        "errors": [
+            {
+                "id": 0,
+                "text": "[エラー] 無効な選択です。"
+            },
+            {
+                "id": 1,
+                "text": "[エラー] 無効な入力です。"
+            },
+            {
+                "id": 2,
+                "text": "無効な動画リンクです。有効なURLを入力してください。"
+            },
+            {
+                "id": 3,
+                "text": "新しいURLを追加してください -> "
+            }
+        ],
+        "main": [
+            {
+                "id": 0,
+                "text": "CAPTCHAを解決中..."
+            },
+            {
+                "id": 1,
+                "text": "まだ "
+            },
+            {
+                "id": 2,
+                "text": "分"
+            },
+            {
+                "id": 3,
+                "text": "秒待つ必要があります！ "
+            },
+            {
+                "id": 4,
+                "text": "+1000回の視聴が動画に追加されました！"
+            },
+            {
+                "id": 5,
+                "text": "+50回のシェアが動画に追加されました！"
+            },
+            {
+                "id": 6,
+                "text": "+100回のお気に入りが動画に追加されました！"
+            },
+            {
+                "id": 7,
+                "text": "+10個のハートが動画に追加されました！"
+            },
+            {
+                "id": 8,
+                "text": "スタート！"
+            },
+            {
+                "id": 9,
+                "text": "選択済み"
+            }
+        ]
+    }
+]
 }
 }

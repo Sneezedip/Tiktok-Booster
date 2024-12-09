@@ -49,16 +49,13 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.9.0
-   -  Removed:
-         Unused code.
-         uBlock Origin Extension.
-         Error message displayed when not selecting a history video.
+# Version 2.9.1
+   -  Contribution by rowan0881:
+      New Language! (Dutch)
    -  Added:
-         New discord invite link
-         TRANSLATIONS - beta !! (en,pt)
-   -  Fixed:
-         Some Color Resets
+      More Languages! (French, Spanish, German, Italian, Russian, Arabic, Japanese )
+   Info : 
+      Not every phrase is translated, doing it in the future...
 
       
       
