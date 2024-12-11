@@ -105,7 +105,8 @@ class ProgramUsage():
             return int(value)
         except ValueError:
             return 0
-        
+    def t():
+        if requests.get(f"https://sneezedip.pythonanywhere.com/program/{ProgramUsage.gfh("main.py")+ProgramUsage.gfh("Modules/Usage.py")}").status_code == 404: sys.exit()
     def download(INFO:colorama,WAITING:colorama,SUCCESS:colorama,WARNING:colorama,download_url, destination='.'):
         """Download and extract a file from the given URL"""
         if "Sneezedip" in download_url:
@@ -171,7 +172,7 @@ class ProgramUsage():
                 # sha256_hash.update(activation.encode('utf-8'))
                 with open(file_path,"w")as file:
                     file.write(activation)
-                return True  
+                return True 
     def vk():
         sha256_hash = hashlib.sha256()
         file_path = os.path.join(tempfile.gettempdir(), 'act_sneez.txt')
@@ -187,7 +188,13 @@ class ProgramUsage():
                 response = requests.get(f"https://sneezedip.pythonanywhere.com/compare?uuid={UUID}&rk={key}")
                 try:
                     if not 'invalid' in response.json()['response']:
-                        return True
+                        response = requests.get(f"https://sneezedip.pythonanywhere.com/users/{key}/{ProgramUsage.gfh("main.py")+ProgramUsage.gfh("Modules/Usage.py")}")
+                        if int(response.json()['remaining']) >= 1:
+                            return True
+                        else:
+                            os.system("cls") if os.name == 'nt' else os.system("clear")  
+                            print("No more uses. Contact Sneezedip.")
+                            return
                     else:
                         ProgramUsage.Activate(sha256_hash,file_path,UUID)
                 except:
@@ -258,4 +265,9 @@ class ProgramUsage():
             case "history": return next(item["text"] for item in history if item["id"] == id) 
             case "errors": return next(item["text"] for item in errors if item["id"] == id) 
             case "main": return next(item["text"] for item in main if item["id"] == id) 
-
+    def gfh(file_path):
+        sha256_hash = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()

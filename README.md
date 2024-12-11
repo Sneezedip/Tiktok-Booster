@@ -49,13 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.9.1
-   -  Contribution by rowan0881:
-      New Language! (Dutch)
+# Version 2.10.0
    -  Added:
-      More Languages! (French, Spanish, German, Italian, Russian, Arabic, Japanese )
-   Info : 
-      Not every phrase is translated, doing it in the future...
+      Uses System. (contact sneezedip on discord to increase yours)
 
       
       

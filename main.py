@@ -10,6 +10,7 @@ from Modules.Usage import ProgramUsage
 from Modules.BannersHandler import Handler
 from Static.InitialInfo import InitialInfo
 try:
+    import hashlib
     import requests
     from tqdm import tqdm
     from selenium import webdriver
@@ -61,9 +62,6 @@ def  is_first_run():
             file.write("Don't Worry, this isn't a virus, just a check to see if it's your first time. :)")
         print(f"{INFO}First Time Detected. Welcome! (This won't appear anymore){Style.RESET_ALL}")
         webbrowser.open("https://discord.gg/sneez")
-    if ProgramUsage.vk():
-        pass
-
 
 def show_credits():
     """Display program credits"""
@@ -114,8 +112,6 @@ class TikTokBooster:
     def __init__(self):
         self.history_selected = None
         global VIDEO
-        if ProgramUsage.vk():
-            pass
         self.elements = []
         while True:
             self.history = ProgramUsage.get_history()
@@ -205,8 +201,6 @@ class TikTokBooster:
         self._select_type()
 
     def _get_initial_views(self):
-        if ProgramUsage.vk():
-            pass
         """Get initial views based on the type"""
         if TYPE == 'views':
             return ProgramUsage.get_numeric_value(self.tiktok_info.get_video_info(Views=True))
@@ -218,8 +212,6 @@ class TikTokBooster:
             return 0
 
     def _check_available(self):
-        if ProgramUsage.vk():
-            pass
         """Check if the required features are available"""
         # available = False
         for type,xpath in Static.typeValues.items():
@@ -228,8 +220,6 @@ class TikTokBooster:
                 self.elements.append(type)
 
     def _handle_captcha(self):
-        if ProgramUsage.vk():
-            pass
         """Handle the captcha on the page"""
         with open('Captcha/captcha.png', 'wb') as file:
             file.write(WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
@@ -245,8 +235,6 @@ class TikTokBooster:
         return self._is_captcha_passed()
 
     def _is_captcha_passed(self):
-        if ProgramUsage.vk():
-            pass
         """Check if captcha was passed successfully"""
         try:
             WebDriverWait(self.driver, SLEEP).until(
@@ -338,6 +326,7 @@ class TikTokBooster:
                                     time.sleep(1)
                                     total_seconds -= 1
                                 print()
+                                ProgramUsage.t()
 
                     except Exception as e:
                         print(f"{WARNING}An exception occurred: {e}")
@@ -349,6 +338,10 @@ class TikTokBooster:
                     time.sleep(2)
 
                     try:
+                        if not ProgramUsage.vk():
+                            os.system("cls") if os.name == 'nt' else os.system("clear")  
+                            print("No more uses. Contact Sneezedip.")
+                            sys.exit()
                         WebDriverWait(self.driver, SLEEP).until(
                             ec.presence_of_element_located((By.XPATH, Static.finalButton[TYPE]))).click()
 
@@ -454,8 +447,6 @@ class TikTokBooster:
         self._show_typeconfig()
 
     def _show_menu(self):
-        if ProgramUsage.vk():
-            pass
         """Show the program configuration menu"""
         os.system("cls") if os.name == 'nt' else os.system("clear")
         print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}Gathering Video Info...", end="\r")
@@ -502,8 +493,6 @@ class TikTokBooster:
                 f"{INFO}[{round((index / AMOUNT) * 100, 1)}%] {Fore.WHITE}Video Hearts : {Fore.WHITE}{hearts} {Fore.GREEN}[+{int(hearts - self.initial_views)}] {Style.BRIGHT}{Fore.MAGENTA}(Est. {ProgramUsage.convert_hours(round((AMOUNT - index) * 2 / 60, 2))} Remaining.{Style.RESET_ALL})")
 
     def _menu(self):
-        if ProgramUsage.vk():
-            pass
         """Program configuration menu"""
         while True:
             try:
@@ -558,9 +547,11 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.9.1")
-    if ProgramUsage.vk():
-        pass
+    check_version("2.10.0")
+    if not ProgramUsage.vk():
+        os.system("cls") if os.name == 'nt' else os.system("clear")  
+        print("No more uses. Contact Sneezedip.")
+        sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")
     show_credits()
     is_first_run()
