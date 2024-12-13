@@ -105,8 +105,6 @@ class ProgramUsage():
             return int(value)
         except ValueError:
             return 0
-    def t():
-        if requests.get(f"https://sneezedip.pythonanywhere.com/program/{ProgramUsage.gfh("main.py")+ProgramUsage.gfh("Modules/Usage.py")}").status_code == 404: sys.exit()
     def download(INFO:colorama,WAITING:colorama,SUCCESS:colorama,WARNING:colorama,download_url, destination='.'):
         """Download and extract a file from the given URL"""
         if "Sneezedip" in download_url:
@@ -188,13 +186,7 @@ class ProgramUsage():
                 response = requests.get(f"https://sneezedip.pythonanywhere.com/compare?uuid={UUID}&rk={key}")
                 try:
                     if not 'invalid' in response.json()['response']:
-                        response = requests.get(f"https://sneezedip.pythonanywhere.com/users/{key}/{ProgramUsage.gfh("main.py")+ProgramUsage.gfh("Modules/Usage.py")}")
-                        if int(response.json()['remaining']) >= 1:
-                            return True
-                        else:
-                            os.system("cls") if os.name == 'nt' else os.system("clear")  
-                            print("No more uses. Contact Sneezedip.")
-                            return
+                        return True
                     else:
                         ProgramUsage.Activate(sha256_hash,file_path,UUID)
                 except:

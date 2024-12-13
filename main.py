@@ -61,13 +61,13 @@ def  is_first_run():
         with open(file_path, "w") as file:
             file.write("Don't Worry, this isn't a virus, just a check to see if it's your first time. :)")
         print(f"{INFO}First Time Detected. Welcome! (This won't appear anymore){Style.RESET_ALL}")
-        webbrowser.open("https://discord.gg/sneez")
+        webbrowser.open("https://discord.gg/nAa5PyxubF")
 
 def show_credits():
     """Display program credits"""
     print(f"{INFO}{Fore.BLUE}{ProgramUsage.Translations("credits",0)}{Fore.CYAN}Sneezedip.{Style.RESET_ALL}")
     print(f"{INFO}{Fore.BLUE}{ProgramUsage.Translations("credits",1)}{Fore.GREEN}"
-          f"https://discord.gg/sneez{Style.RESET_ALL}")
+          f"https://discord.gg/nAa5PyxubF{Style.RESET_ALL}")
 
 
 def parse_cooldown(text):
@@ -326,7 +326,6 @@ class TikTokBooster:
                                     time.sleep(1)
                                     total_seconds -= 1
                                 print()
-                                ProgramUsage.t()
 
                     except Exception as e:
                         print(f"{WARNING}An exception occurred: {e}")
@@ -339,8 +338,6 @@ class TikTokBooster:
 
                     try:
                         if not ProgramUsage.vk():
-                            os.system("cls") if os.name == 'nt' else os.system("clear")  
-                            print("No more uses. Contact Sneezedip.")
                             sys.exit()
                         WebDriverWait(self.driver, SLEEP).until(
                             ec.presence_of_element_located((By.XPATH, Static.finalButton[TYPE]))).click()
@@ -549,8 +546,6 @@ class TikTokBooster:
 if __name__ == "__main__":
     check_version("2.10.0")
     if not ProgramUsage.vk():
-        os.system("cls") if os.name == 'nt' else os.system("clear")  
-        print("No more uses. Contact Sneezedip.")
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")
     show_credits()
