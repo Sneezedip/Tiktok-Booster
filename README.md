@@ -49,8 +49,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.10.1
-   rollback version
+# Version 2.11.0
+   - Cross-platform support (Windows and Linux)
+   - Improved Perfomance
 
       
       

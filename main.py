@@ -9,6 +9,7 @@ from Static.Static import Static
 from Modules.Usage import ProgramUsage
 from Modules.BannersHandler import Handler
 from Static.InitialInfo import InitialInfo
+import platform
 try:
     import hashlib
     import requests
@@ -53,6 +54,8 @@ WARNING = f"{Fore.RED}[WARNING] "
 
 SLEEP = 15
 SKIP_WEBHOOK_VERIFICATION = config.getboolean('Settings', 'SKIP_WEBHOOK_CONFIGURATION')
+
+OPERATING_SYSTEM = platform.system()
 
 def  is_first_run():
     """Check if it's the first run of the program"""
@@ -100,12 +103,19 @@ def check_version(current_version):
             elif u == "n":
                 return
 
-
-if not os.path.exists('Tesseract'):
-    print(f'{INFO}{Fore.WHITE}{ProgramUsage.Translations("credits",1)}{Style.RESET_ALL}', end="\r")
-    url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'
-    extract_to = './'
-    ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,url, extract_to)
+if OPERATING_SYSTEM == "Windows":
+    if not os.path.exists('Tesseract'):
+        print(f'{INFO}{Fore.WHITE}{ProgramUsage.Translations("credits",1)}{Style.RESET_ALL}', end="\r")
+        url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'
+        extract_to = './'
+        ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,url, extract_to)
+elif OPERATING_SYSTEM == "Linux":
+    if not os.path.exists("/usr/bin/tesseract"):
+        print(f'{INFO}{Fore.WHITE}{ProgramUsage.Translations("credits",1)}{Style.RESET_ALL}', end="\r")
+        os.system("sudo apt install tesseract-ocr")
+else:
+    print(f"{WARNING}Unsupported Operating System ({platform.system()})! Exiting...")
+    sys.exit()
 
 
 class TikTokBooster:
@@ -178,7 +188,13 @@ class TikTokBooster:
 
         time.sleep(2)
 
-        pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
+        if OPERATING_SYSTEM == "Windows":
+            pytesseract.pytesseract.tesseract_cmd = r'Tesseract/tesseract.exe'
+        elif OPERATING_SYSTEM == "Linux":
+            pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+        else:
+            print(f"{WARNING}Unsupported Operating System ({platform.system()})! Exiting...")
+            sys.exit()
         try:
             WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
                 (By.XPATH, '/html/body/div[8]/div[2]/div[2]/div[3]/div[2]/button[1]'))).click()
@@ -544,7 +560,7 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.10.1")
+    check_version("2.11.0")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")

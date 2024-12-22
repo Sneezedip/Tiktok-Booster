@@ -1,3 +1,7 @@
+# Version 2.11.0
+   - Cross-platform support (Windows and Linux)
+   - Improved Perfomance
+
 # Version 2.10.1
    rollback version
 
