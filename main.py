@@ -129,6 +129,7 @@ class TikTokBooster:
                 break
             else:
                 print(f"\n{Fore.YELLOW}{ProgramUsage.Translations("history",0)}{Fore.RESET}")
+                
                 for index, record in enumerate(self.history, start=1):
                     if isinstance(record, dict):
                         print(f"\n{Fore.CYAN}[{index}] {Fore.WHITE}{Style.BRIGHT}Video Link: {Style.RESET_ALL}https://www.tiktok.com/@{record["creator"]}/video/{record["video_id"]}\n"
@@ -560,7 +561,7 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.11.0")
+    check_version("2.11.1")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")

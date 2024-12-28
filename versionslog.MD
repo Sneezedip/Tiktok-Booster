@@ -1,3 +1,7 @@
+# Version 2.11.1
+   - Fixed a minor Styling issue.
+   - Added styles to different remaining time.
+
 # Version 2.11.0
    - Cross-platform support (Windows and Linux)
    - Improved Perfomance

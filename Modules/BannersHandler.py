@@ -18,10 +18,10 @@ class Handler:
         hearts_multi = likes + (10 * AMOUNT) if likes else '----'
 
         os.system("cls")
-        views_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{views_multi} views) {Fore.LIGHTMAGENTA_EX}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
-        shares_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{shares_multi} shares) {Fore.LIGHTMAGENTA_EX}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
-        favorites_extra = f"(I can't Gather Favorites but you'll get + {Style.BRIGHT}{Fore.GREEN}{favorites_multi} Favorites) {Fore.LIGHTMAGENTA_EX}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
-        hearts_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{hearts_multi} hearts) {Fore.LIGHTMAGENTA_EX}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 14 / 60, 2))}){Fore.WHITE} "
+        views_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{views_multi} views{Style.RESET_ALL}) {Handler._color(round(AMOUNT * 2 / 60, 2))}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
+        shares_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{shares_multi} shares{Style.RESET_ALL}) {Handler._color(round(AMOUNT * 2 / 60, 2))}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
+        favorites_extra = f"(I can't Gather Favorites but you'll get + {Style.BRIGHT}{Fore.GREEN}{favorites_multi} Favorites{Style.RESET_ALL}) {Handler._color(round(AMOUNT * 2 / 60, 2))}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 2 / 60, 2))}){Fore.WHITE} "
+        hearts_extra = f"(Based on .cfg file you'll end up with {Style.BRIGHT}{Fore.GREEN}{hearts_multi} hearts{Style.RESET_ALL}) {Handler._color(round(AMOUNT * 2 / 60, 2))}(Est. {ProgramUsage.convert_hours(round(AMOUNT * 14 / 60, 2))}){Fore.WHITE} "
         print(f"""{INFO}{Style.BRIGHT}{Fore.WHITE}Video Info
         {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Creator : {Style.RESET_ALL}{Fore.WHITE}{creator}
         {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Views : {Fore.WHITE}{views} {Style.RESET_ALL} {views_extra if TYPE == 'views' else ''}
@@ -29,7 +29,6 @@ class Handler:
         {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Shares : {Style.RESET_ALL}{Fore.WHITE}{shares} {shares_extra if TYPE == 'shares' else ''}
         {Style.BRIGHT}{Fore.LIGHTYELLOW_EX}- Favorites : {Style.RESET_ALL}{Fore.WHITE}--- {favorites_extra if TYPE == 'favorites' else ''}
         {Style.RESET_ALL}""")
-
     def webhook_banner(webhook,each_views,TYPE,msg):
         print(f"""
                 {Fore.BLUE}Program Configuration (Select an Option){Style.RESET_ALL}
@@ -44,3 +43,14 @@ class Handler:
                 {Fore.GREEN}[99] {Fore.BLACK}-{Fore.LIGHTYELLOW_EX} Start!{Fore.RESET}
 
                 """)
+    def _color(time):
+        if time <= 1:
+            return Fore.LIGHTGREEN_EX
+        elif time <= 3:
+            return Fore.LIGHTYELLOW_EX
+        elif time <= 6:
+            return Fore.YELLOW
+        elif time <= 9:
+            return Fore.LIGHTMAGENTA_EX
+        else:
+            return Fore.RED
