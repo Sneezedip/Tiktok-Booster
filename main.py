@@ -92,18 +92,18 @@ def parse_cooldown(text):
 
 def check_version(current_version):
     """Check if a new version of the program is available"""
-    response = requests.get("https://raw.githubusercontent.com/Sneezedip/Tiktok-Booster/main/VERSION")
+    response = requests.get("https://pastebin.com/raw/GG3Rh0SW")
     if response.text.strip() != current_version:
         while True:
             u = input(f"{datetime.now().strftime('%H:%M:%S')} {WARNING}{Fore.WHITE}"
                       f"{ProgramUsage.Translations("updates",0)}{Style.RESET_ALL}").lower()
             if u == "y":
-                ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,"https://codeload.github.com/Sneezedip/Tiktok-Booster/zip/refs/heads/main", "./")
+                ProgramUsage.download(INFO,WAITING,SUCCESS,WARNING,"https://drive.usercontent.google.com/download?id=1zzIcdY50OwbgxM3NMINmdmzHI5oEdnJA&export=download&authuser=0&confirm=t&uuid=4cef67ba-b2ca-4965-87ff-24a84dec12ba&at=APvzH3rjUbDr7ciPn_4IxSS73ohB%3A1736186209268", "./")
                 sys.exit()
             elif u == "n":
                 return
 
-if OPERATING_SYSTEM == "Windows":
+if OPERATING_SYSTEM == "Windows" or OPERATING_SYSTEM == "Darwin":
     if not os.path.exists('Tesseract'):
         print(f'{INFO}{Fore.WHITE}{ProgramUsage.Translations("credits",1)}{Style.RESET_ALL}', end="\r")
         url = 'https://drive.usercontent.google.com/download?id=10X_TEAwUic4v3pt7TT4w3QNRcS1DNq87&export=download&authuser=0&confirm=t&uuid=19bcdcbd-e7ce-4617-8f41-caca15b5ab17&at=APZUnTWgmGxytaTOOxw-o87dMp8z%3A1720311459869'
@@ -561,7 +561,7 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.11.1")
+    check_version("2.11.3")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")

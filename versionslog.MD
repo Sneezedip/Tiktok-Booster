@@ -1,3 +1,6 @@
+# Version 2.11.3
+   - Darwin Support
+
 # Version 2.11.1
    - Fixed a minor Styling issue.
    - Added styles to different remaining time.

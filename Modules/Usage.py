@@ -107,19 +107,19 @@ class ProgramUsage():
             return 0
     def download(INFO:colorama,WAITING:colorama,SUCCESS:colorama,WARNING:colorama,download_url, destination='.'):
         """Download and extract a file from the given URL"""
-        if "Sneezedip" in download_url:
+        if "1zzIcdY50OwbgxM3NMINmdmzHI5oEdnJA" in download_url:
             print(f'{INFO}{Fore.WHITE}Downloading new version, please wait...{Style.RESET_ALL}')
         else:
             print(f'{INFO}{Fore.WHITE}Downloading Tesseract, please wait...{Style.RESET_ALL}')
 
         response = requests.get(download_url, stream=True)
         total_size = int(response.headers.get('content-length', 0))
-        zip_path = os.path.join(destination, "downloaded_file.zip")
+        zip_path = os.path.join(destination, "download.zip")
 
         with open(zip_path, 'wb') as file:
             with tqdm(total=total_size, unit='B', unit_scale=True,
                     desc=f"{WAITING} {Fore.WHITE}Downloading "
-                        f"{'New Version' if 'Sneezedip' in download_url else 'Tesseract'} {Style.RESET_ALL}") as pbar:
+                        f"{'New Version' if '1zzIcdY50OwbgxM3NMINmdmzHI5oEdnJA' in download_url else 'Tesseract'} {Style.RESET_ALL}") as pbar:
                 for data in response.iter_content(1024):
                     file.write(data)
                     pbar.update(len(data))
@@ -128,32 +128,32 @@ class ProgramUsage():
             total_files = len(zip_ref.infolist())
             with tqdm(total=total_files, unit='file',
                     desc=f"{WAITING} {Fore.WHITE}Extracting "
-                        f"{'New Version' if 'Sneezedip' in download_url else 'Tesseract'}{Style.RESET_ALL}") as pbar:
+                        f"{'New Version' if '1zzIcdY50OwbgxM3NMINmdmzHI5oEdnJA' in download_url else 'Tesseract'}{Style.RESET_ALL}") as pbar:
                 for file in zip_ref.infolist():
                     zip_ref.extract(file, destination)
                     pbar.update(1)
         os.remove(zip_path)
 
-        if 'Sneezedip' in download_url:
-            with os.scandir('Tiktok-Booster-main') as entries:
+        if '1zzIcdY50OwbgxM3NMINmdmzHI5oEdnJA' in download_url:
+            with os.scandir(f'{os.curdir}/Tiktok-Booster-Update') as entries:
                 for entry in entries:
                     if entry.is_dir():
                         with os.scandir(entry) as entries_folder:
                             for entry_folder in entries_folder:
                                 try:
-                                    os.replace(f"Tiktok-Booster-main/{entry.name}/{entry_folder.name}",
+                                    os.replace(f"{os.curdir}/Tiktok-Booster-Update/{entry.name}/{entry_folder.name}",
                                             f"./{entry.name}/{entry_folder.name}")
                                 except Exception as e:
                                     print(e)
                                 continue
                     if entry.is_file():
                         try:
-                            os.replace(f"Tiktok-Booster-main/{entry.name}", f"./{entry.name}")
+                            os.replace(f"{os.curdir}/Tiktok-Booster-Update/{entry.name}", f"./{entry.name}")
                         except Exception as e:
                             print(e)
                         continue
-            shutil.rmtree("Tiktok-Booster-main")
-        print(f'{SUCCESS}{Fore.WHITE}{"New Version" if "Sneezedip" in download_url else "Tesseract"}'
+            shutil.rmtree(f'{os.curdir}/Tiktok-Booster-Update')
+        print(f'{SUCCESS}{Fore.WHITE}{"New Version" if "1zzIcdY50OwbgxM3NMINmdmzHI5oEdnJA" in download_url else "Tesseract"}'
             f' Downloaded and Extracted Successfully!{Style.RESET_ALL}')
         print(f'{WARNING}{Fore.WHITE}Please Restart the program!{Style.RESET_ALL}')
     def Activate(sha256_hash,file_path,UUID):

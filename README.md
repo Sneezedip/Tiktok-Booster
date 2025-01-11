@@ -49,9 +49,8 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.11.1
-   - Fixed a minor Styling issue.
-   - Added styles to different remaining time.
+# Version 2.11.3
+   - Darwin Support
 
       
       
