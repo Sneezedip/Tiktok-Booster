@@ -276,5 +276,8 @@ class ProgramUsage():
         return sha256_hash.hexdigest()
     
     def is_down():
-        return True if requests.get("https://zefoy.com/").status_code != 200 else False
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+        }
+        return True if requests.get("https://zefoy.com/", headers=headers).status_code != 200 else False
                                                                                  

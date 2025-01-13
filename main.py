@@ -564,7 +564,7 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.11.3")
+    check_version("2.12.0")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")
