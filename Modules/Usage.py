@@ -1,6 +1,7 @@
 import json
 import sys,os
 import configparser
+import time
 try:
     import hashlib
     import subprocess
@@ -13,6 +14,8 @@ try:
     from tqdm import tqdm
     import tempfile
     import uuid
+    import pyperclip
+    from halo import Halo
 except ImportError:
     print('Installing Libraries...')
     os.system("pip install -r requirements.txt")
@@ -158,19 +161,26 @@ class ProgramUsage():
         print(f'{WARNING}{Fore.WHITE}Please Restart the program!{Style.RESET_ALL}')
     def Activate(sha256_hash,file_path,UUID):
         response = requests.get(f"https://sneezedip.pythonanywhere.com/get_key?uuid={UUID}").json()
-        print(f'{Fore.RED} Program not Activated.')
-        print(f'''{Fore.CYAN} This program is free of use, but you need an activation key to continue!\n
-            Please join the discord and go to the \'get-key\' channel and insert this command{Style.RESET_ALL}''')
-        print(f'/activate {response['response']}')
+        print(f'{Style.BRIGHT}{Fore.RED}[Program not Activated]{Style.RESET_ALL}\n')
+        print(f'''{Fore.RED} This program is free of use, but you need an activation key to continue!{Style.RESET_ALL}
+{Fore.YELLOW}Please join https://discord.gg/nAa5PyxubF and go to the \'get-key\' channel\n {Style.RESET_ALL}''')
+        print(f'{Style.BRIGHT}YOUR KEY : {Fore.LIGHTGREEN_EX}{response['response']}{Style.RESET_ALL}')
+        pyperclip.copy(response['response'])
+        print(f'{Fore.LIGHTBLACK_EX}(The key has been copied to your clipboard!){Style.RESET_ALL}\n')
         while True:
             activation = input(f"{Fore.YELLOW}[Waiting] {Fore.WHITE}Please enter Activation Key >>> ")
             response = requests.get(f"https://sneezedip.pythonanywhere.com/validate_activation?uuid={UUID}&key={activation}")
+            spinner = Halo(text="Verifying key", spinner="dots")
+            spinner.start()
+            time.sleep(2)  # Simulate key verification delay
             if 'Valid Key!' in response.json()['response']:
-                print('Activating the program.')
-                # sha256_hash.update(activation.encode('utf-8'))
+                spinner.succeed("Key Verified! Access Granted 🎉")
                 with open(file_path,"w")as file:
                     file.write(activation)
                 return True 
+            else:
+                spinner.fail("Invalid Key. Please try again.")
+            
     def vk():
         sha256_hash = hashlib.sha256()
         file_path = os.path.join(tempfile.gettempdir(), 'act_sneez.txt')
@@ -190,7 +200,8 @@ class ProgramUsage():
                     else:
                         ProgramUsage.Activate(sha256_hash,file_path,UUID)
                 except:
-                    ProgramUsage.Activate(sha256_hash,file_path,UUID)     
+                    ProgramUsage.Activate(sha256_hash,file_path,UUID)   
+        return  
     def change_video_url(new_url):
         content = []
         with open("config.cfg", "r") as file:
@@ -263,3 +274,7 @@ class ProgramUsage():
             for byte_block in iter(lambda: f.read(4096), b""):
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
+    
+    def is_down():
+        return True if requests.get("https://zefoy.com/").status_code != 200 else False
+                                                                                 

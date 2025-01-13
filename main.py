@@ -120,6 +120,9 @@ else:
 
 class TikTokBooster:
     def __init__(self):
+        if ProgramUsage.is_down():
+            print(f"{WARNING}https://www.zefoy.com is currently down for maintenance. Please try again later..")
+            sys.exit()
         self.history_selected = None
         global VIDEO
         self.elements = []

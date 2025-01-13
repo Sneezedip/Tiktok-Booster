@@ -1,3 +1,8 @@
+# Version 2.12.0
+   - More colors Format.
+   - Added an check to detect whenever zefoy is down.
+   - Bug Fixes.
+
 # Version 2.11.3
    - Darwin Support
 

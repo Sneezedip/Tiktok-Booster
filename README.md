@@ -51,9 +51,10 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.11.3
-   - Darwin Support
-
+# Version 2.12.0
+   - More colors Format.
+   - Added an check to detect whenever zefoy is down.
+   - Bug Fixes.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)
