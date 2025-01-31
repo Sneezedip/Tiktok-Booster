@@ -12,3 +12,4 @@ beautifulsoup4~=4.12.3
 uuid
 pyperclip
 halo
+websocket-client

@@ -1,3 +1,8 @@
+# Version 2.13.0
+   - Fixed Session Not Created Exception.
+   - Fixed some logs.
+   - Added python version detection.
+
 # Version 2.12.0
    - More colors Format.
    - Added an check to detect whenever zefoy is down.

@@ -1,5 +1,6 @@
 import time
 import configparser
+import subprocess
 import os
 import sys
 import zipfile
@@ -26,6 +27,7 @@ try:
     from selenium.common.exceptions import TimeoutException
     from selenium.common.exceptions import NoSuchElementException
     from selenium.common.exceptions import ElementNotInteractableException
+    from selenium.common.exceptions import SessionNotCreatedException
     from datetime import datetime, timedelta
     from discordwebhook import Discord
     from Modules.VideoInfo import TikTokVideoInfo
@@ -88,7 +90,16 @@ def parse_cooldown(text):
 
     return minutes * 60 + seconds
 
-
+def check_issues():
+    major, minor = sys.version_info[:2]
+    if (major, minor) < (3, 12):
+        os.system("cls") if os.name == 'nt' else os.system("clear")
+        print(Fore.RED + Style.BRIGHT + "[ERROR] TikTok Booster requires Python 3.12 or higher!")
+        print(Fore.YELLOW + f"         You are using Python {major}.{minor}. Please update it.")
+        print(Fore.CYAN + "\n➡ You can update Python from:")
+        print(Fore.GREEN + "   - Microsoft Store: Search for 'Python' and update.")
+        print(Fore.GREEN + "   - Official Website: https://www.python.org/downloads/")
+        sys.exit(1) 
 
 def check_version(current_version):
     """Check if a new version of the program is available"""
@@ -183,7 +194,7 @@ class TikTokBooster:
         for option in Static.ChromeOptions:
             self.options.add_argument(option)
         if config.getboolean('Settings', 'HEADLESS'):
-            self.options.add_argument("--headless=old")
+            self.options.add_argument("--headless=new")
 
         self.driver = webdriver.Chrome(options=self.options)
 
@@ -564,10 +575,14 @@ class TikTokBooster:
 
 
 if __name__ == "__main__":
-    check_version("2.12.0")
+    check_issues()
+    check_version("2.13.0")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")
     show_credits()
     is_first_run()
-    TikTokBooster()
+    try:
+        TikTokBooster()
+    except SessionNotCreatedException:
+        print("Session was not created")
