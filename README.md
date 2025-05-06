@@ -51,10 +51,8 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.13.0
-   - Fixed Session Not Created Exception.
-   - Fixed some logs.
-   - Added python version detection.
+# Version 2.13.1
+   - Bug Fixes. Manual captcha solving is now required.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

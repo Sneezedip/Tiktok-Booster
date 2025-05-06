@@ -1,3 +1,6 @@
+# Version 2.13.1
+   - Bug Fixes. Manual captcha solving is now required.
+
 # Version 2.13.0
    - Fixed Session Not Created Exception.
    - Fixed some logs.

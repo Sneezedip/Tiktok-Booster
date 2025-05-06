@@ -13,3 +13,4 @@ uuid
 pyperclip
 halo
 websocket-client
+opencv-python

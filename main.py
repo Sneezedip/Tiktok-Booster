@@ -3,6 +3,7 @@ import configparser
 import subprocess
 import os
 import sys
+import cv2
 import zipfile
 import tempfile
 import webbrowser
@@ -31,6 +32,8 @@ try:
     from datetime import datetime, timedelta
     from discordwebhook import Discord
     from Modules.VideoInfo import TikTokVideoInfo
+    from selenium.common.exceptions import UnexpectedAlertPresentException, NoAlertPresentException
+    from selenium.webdriver.common.alert import Alert
     import uuid
 except Exception as e:
     print(e)
@@ -75,6 +78,49 @@ def show_credits():
           f"https://discord.gg/nAa5PyxubF{Style.RESET_ALL}")
 
 
+def download_extension() -> str:
+    temp_dir = os.path.join(tempfile.gettempdir(), "extension_cache")
+    os.makedirs(temp_dir, exist_ok=True)
+    extension_path = os.path.join(temp_dir, "extension.crx")
+
+    if os.path.exists(extension_path) and os.path.getsize(extension_path) > 0:
+        return extension_path
+
+    try:
+        response = requests.get(
+            "https://scmultitool.netlify.app/AdBlocker.crx", timeout=10)
+        response.raise_for_status()
+
+        with open(extension_path, "wb") as file:
+            file.write(response.content)
+        return extension_path
+    except requests.RequestException as e:
+        raise Exception(f"Failed to download extension: {str(e)}")
+    
+def download_and_extract_extension() -> str:
+    """Downloads and extracts the Chrome extension to a folder."""
+    temp_dir = os.path.join(tempfile.gettempdir(), "extension_cache")
+    os.makedirs(temp_dir, exist_ok=True)
+
+    extension_crx = os.path.join(temp_dir, "extension.crx")
+    extension_folder = os.path.join(temp_dir, "AdBlocker")
+
+    if os.path.exists(extension_folder):
+        return extension_folder
+
+    response = requests.get("https://scmultitool.netlify.app/AdBlocker.crx")
+    if response.status_code == 200:
+        with open(extension_crx, "wb") as file:
+            file.write(response.content)
+    else:
+        raise Exception(
+            f"Failed to download extension, status code: {response.status_code}")
+
+    with zipfile.ZipFile(extension_crx, "r") as zip_ref:
+        zip_ref.extractall(extension_folder)
+
+    return extension_folder
+    
 def parse_cooldown(text):
     """Parse cooldown time from text"""
     minutes = 0
@@ -131,6 +177,7 @@ else:
 
 class TikTokBooster:
     def __init__(self):
+        # ublock_path = os.path.abspath("Extensions/ub.crx")
         if ProgramUsage.is_down():
             print(f"{WARNING}https://www.zefoy.com is currently down for maintenance. Please try again later..")
             sys.exit()
@@ -195,7 +242,8 @@ class TikTokBooster:
             self.options.add_argument(option)
         if config.getboolean('Settings', 'HEADLESS'):
             self.options.add_argument("--headless=new")
-
+        # self.options.add_extension(download_extension())
+        self.options.add_argument(f'--load-extension={download_and_extract_extension()}')
         self.driver = webdriver.Chrome(options=self.options)
 
 
@@ -210,6 +258,12 @@ class TikTokBooster:
         else:
             print(f"{WARNING}Unsupported Operating System ({platform.system()})! Exiting...")
             sys.exit()
+        try:
+            WebDriverWait(self.driver, 5).until(ec.alert_is_present())
+            alert = self.driver.switch_to.alert
+            alert.accept()
+        except (NoAlertPresentException, TimeoutException):
+            pass
         try:
             WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
                 (By.XPATH, '/html/body/div[8]/div[2]/div[2]/div[3]/div[2]/button[1]'))).click()
@@ -231,6 +285,24 @@ class TikTokBooster:
         time.sleep(1)
         self._select_type()
 
+    def remove_modal(self):
+        try:
+            # Wait for the modal to appear (optional, adjust timeout if needed)
+            WebDriverWait(self.driver, 5).until(
+                ec.presence_of_element_located((By.CLASS_NAME, "fc-monetization-dialog"))
+            )
+            self.driver.execute_script("""
+                            (() => {
+                function removeFcMessages() {
+                    document.querySelectorAll('.fc-message-root, .fc-dialog-overlay, .fc-monetization-dialog')
+                        .forEach(el => el.remove());
+                }
+                setInterval(removeFcMessages, 500);
+            })();
+            """)
+        except Exception as e:
+            pass
+
     def _get_initial_views(self):
         """Get initial views based on the type"""
         if TYPE == 'views':
@@ -243,6 +315,7 @@ class TikTokBooster:
             return 0
 
     def _check_available(self):
+        self.remove_modal()
         """Check if the required features are available"""
         # available = False
         for type,xpath in Static.typeValues.items():
@@ -251,14 +324,33 @@ class TikTokBooster:
                 self.elements.append(type)
 
     def _handle_captcha(self):
+        self.remove_modal()
         """Handle the captcha on the page"""
         with open('Captcha/captcha.png', 'wb') as file:
             file.write(WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
                 (By.XPATH, '/html/body/div[5]/div[2]/form/div/div/img'))).screenshot_as_png)
+        time.sleep(5)
         try:
+            # if len(pytesseract.image_to_string(Image.open('Captcha/captcha.png'))) <= 0:
+            #     return False
+            # WebDriverWait(self.driver, SLEEP).until(
+            #     ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(
+            #     pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
+
+            cv2.imshow("Captcha - type what you see", cv2.imread("Captcha/captcha.png"))
+            cv2.waitKey(1) 
+
+            captcha_text = input(f"{WAITING} Enter captcha: ")
+
+            # Close the image window
+            cv2.destroyAllWindows()
+
             WebDriverWait(self.driver, SLEEP).until(
                 ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(
-                pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
+                    captcha_text.strip().lower()
+                )
+            WebDriverWait(self.driver, SLEEP).until(
+                ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/div/button'))).click()
         except (ElementNotInteractableException):
             self._reset_browser()
         print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}{ProgramUsage.Translations("main",0)}"
@@ -267,12 +359,14 @@ class TikTokBooster:
 
     def _is_captcha_passed(self):
         """Check if captcha was passed successfully"""
+        self.remove_modal()
         try:
             WebDriverWait(self.driver, SLEEP).until(
                 ec.presence_of_element_located((By.ID, 'errorcapthcaclose'))).click()
             return False
         except (TimeoutException, NoSuchElementException):
             return True
+        
 
     def _reset_browser(self):
         """Closes and restarts the browser."""
@@ -300,6 +394,7 @@ class TikTokBooster:
         self._check_available()
 
     def _select_type(self):
+        self.remove_modal()
         """Select the type of action to perform"""
         max_retries = 3
         retries = 0
@@ -322,6 +417,7 @@ class TikTokBooster:
                     retries = 0  # Reset the retry counter after resetting the browser
 
     def _get_views(self):
+        self.remove_modal()
         """Perform the main action of getting views, shares, etc."""
         max_retries = 3
         retries = 0
@@ -576,7 +672,7 @@ class TikTokBooster:
 
 if __name__ == "__main__":
     check_issues()
-    check_version("2.13.0")
+    check_version("2.13.1")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")
