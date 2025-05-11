@@ -279,5 +279,7 @@ class ProgramUsage():
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
         }
+        print(requests.get("https://zefoy.com/").text)
         return True if requests.get("https://zefoy.com/", headers=headers).status_code != 200 else False
                                                                                  
+# ProgramUsage.is_down()

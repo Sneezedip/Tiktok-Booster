@@ -178,9 +178,9 @@ else:
 class TikTokBooster:
     def __init__(self):
         # ublock_path = os.path.abspath("Extensions/ub.crx")
-        if ProgramUsage.is_down():
-            print(f"{WARNING}https://www.zefoy.com is currently down for maintenance. Please try again later..")
-            sys.exit()
+        # if ProgramUsage.is_down():
+        #     print(f"{WARNING}https://www.zefoy.com is currently down for maintenance. Please try again later..")
+        #     sys.exit()
         self.history_selected = None
         global VIDEO
         self.elements = []
