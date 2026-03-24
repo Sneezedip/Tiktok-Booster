@@ -3,7 +3,7 @@
 
 <div align="center">
    
-![Status](https://img.shields.io/badge/AUTO%20CAPTCHA%20BYPASS-NOT%20WORKING-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/AUTO%20CAPTCHA%20BYPASS-WORKING-green?style=for-the-badge)
 
 </div>
 
