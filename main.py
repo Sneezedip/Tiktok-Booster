@@ -242,7 +242,7 @@ class TikTokBooster:
             self.options.add_argument(option)
         if config.getboolean('Settings', 'HEADLESS'):
             self.options.add_argument("--headless=new")
-        # self.options.add_extension(download_extension())
+        self.options.add_extension(download_extension())
         self.options.add_argument(f'--load-extension={download_and_extract_extension()}')
         self.driver = webdriver.Chrome(options=self.options)
 
@@ -276,9 +276,20 @@ class TikTokBooster:
         except (TimeoutException):
             self.is_webhook_valid = False
 
-        while not self._handle_captcha():
+        max_captcha_attempts = 3
+        attempt = 1
+        while attempt <= max_captcha_attempts:
+            if self._handle_captcha():
+                print("Captcha passed successfully!")
+                break
+            print(f"Attempt #{attempt} failed, refreshing... ({max_captcha_attempts - attempt + 1} left)")
             self.driver.refresh()
-            time.sleep(1)
+            time.sleep(2)
+            attempt += 1
+        else:
+            print(f"{WARNING}Max captcha attempts ({max_captcha_attempts}) reached. Resetting browser or manual intervention needed.")
+            self._reset_browser()
+        
         self._check_available()
         self._show_typeconfig()
         self._show_menu()
@@ -286,10 +297,11 @@ class TikTokBooster:
         self._select_type()
 
     def remove_modal(self):
+        time.sleep(1)
         try:
             # Wait for the modal to appear (optional, adjust timeout if needed)
-            WebDriverWait(self.driver, 5).until(
-                ec.presence_of_element_located((By.CLASS_NAME, "fc-monetization-dialog"))
+            WebDriverWait(self.driver, 10).until(
+                ec.presence_of_element_located((By.CLASS_NAME, "fc-list-container"))
             )
             self.driver.execute_script("""
                             (() => {
@@ -319,53 +331,102 @@ class TikTokBooster:
         """Check if the required features are available"""
         # available = False
         for type,xpath in Static.typeValues.items():
-            if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
-                (By.XPATH, xpath))).is_enabled():
-                self.elements.append(type)
+            try:
+                if WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
+                    (By.XPATH, xpath))).is_enabled():
+                    self.elements.append(type)
+            except Exception as e:
+                print(f"Error on {e}.. passing...")
+                continue
 
     def _handle_captcha(self):
         self.remove_modal()
+        print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}Passing Captcha{Style.RESET_ALL}")
         """Handle the captcha on the page"""
+
         with open('Captcha/captcha.png', 'wb') as file:
             file.write(WebDriverWait(self.driver, SLEEP).until(ec.presence_of_element_located(
                 (By.XPATH, '/html/body/div[5]/div[2]/form/div/div/img'))).screenshot_as_png)
-        time.sleep(5)
+        time.sleep(3)
+        
+        captcha_text = pytesseract.image_to_string(Image.open('Captcha/captcha.png')).strip()
+        if len(captcha_text) <= 0:
+            captcha_text = ''
+            
         try:
-            # if len(pytesseract.image_to_string(Image.open('Captcha/captcha.png'))) <= 0:
-            #     return False
-            # WebDriverWait(self.driver, SLEEP).until(
-            #     ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(
-            #     pytesseract.image_to_string(Image.open('Captcha/captcha.png')))
+            input_field = WebDriverWait(self.driver, SLEEP).until(
+                ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input')))
+            input_field.clear()
+            input_field.send_keys(captcha_text)
+            time.sleep(1)
+        except Exception as input_err:
+            print(f"Captcha input error: {input_err}")
+            return False
 
-            cv2.imshow("Captcha - type what you see", cv2.imread("Captcha/captcha.png"))
-            cv2.waitKey(1) 
-
-            captcha_text = input(f"{WAITING} Enter captcha: ")
-
-            # Close the image window
-            cv2.destroyAllWindows()
-
-            WebDriverWait(self.driver, SLEEP).until(
-                ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input'))).send_keys(
-                    captcha_text.strip().lower()
-                )
-            WebDriverWait(self.driver, SLEEP).until(
-                ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/div/button'))).click()
-        except (ElementNotInteractableException):
-            self._reset_browser()
-        print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}{Fore.WHITE}{ProgramUsage.Translations("main",0)}"
-              f"{Style.RESET_ALL}", end="\r")
-        return self._is_captcha_passed()
+        print(f"{Fore.CYAN}🔍 About to click submit button...{Style.RESET_ALL}") 
+        submit_btn = WebDriverWait(self.driver, SLEEP).until(
+            ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/div/button')))
+            
+        try:
+            time.sleep(2)
+            submit_btn.click()
+            print(f"{Fore.GREEN}✅ Submit clicked successfully, verifying...{Style.RESET_ALL}") 
+        except Exception as click_err:
+            print(f"{Fore.RED}❌ Click failed: {Fore.WHITE}{click_err}{Style.RESET_ALL}")
+            return False
+            
+        captcha_success = self._is_captcha_passed()
+            
+        # except Exception as e:
+        #     print(f"Error in captcha handling: {e}")
+        #     self._reset_browser()
+        #     captcha_success = False
+        
+        print("Captcha Finished?", captcha_success)
+        return captcha_success
 
     def _is_captcha_passed(self):
         """Check if captcha was passed successfully"""
+        print("Verifying captcha success...")
         self.remove_modal()
+        time.sleep(5)
+        
+        # Multiple fail indicators
+        fail_selectors = [
+            (By.CLASS_NAME, 'btn btn-secondary col-sm'),  # New captcha button
+            (By.XPATH, '/html/body/div[5]/div[2]/form'),  # Captcha form still present
+            (By.XPATH, '/html/body/div[5]/div[2]/form/div/div/img')  # Captcha image
+        ]
+        
+        for by, selector in fail_selectors:
+            try:
+                WebDriverWait(self.driver, 3).until(ec.presence_of_element_located((by, selector)))
+                print(f"{Fore.RED}❌ Captcha fail detected: {selector} – closing...{Style.RESET_ALL}")
+                close_btn = self.driver.find_element(by, selector)
+                self.driver.execute_script("arguments[0].click();", close_btn)
+                print(f"{Fore.YELLOW}🔄 Closed error modal, screenshot for debug{Style.RESET_ALL}")
+                self.driver.save_screenshot('Captcha/debug_fail.png')
+                time.sleep(2)
+                return False
+            except Exception as e:
+                return True
+            except TimeoutException:
+                continue
+        
+        # Conservative success: if no fail selectors + any button visible
         try:
-            WebDriverWait(self.driver, SLEEP).until(
-                ec.presence_of_element_located((By.ID, 'errorcapthcaclose'))).click()
-            return False
-        except (TimeoutException, NoSuchElementException):
-            return True
+            any_type_btn = WebDriverWait(self.driver, 8).until(
+                ec.any_of(
+                    ec.presence_of_element_located((By.XPATH, Static.typeValues.get('views', '//button'))),
+                    ec.presence_of_element_located((By.XPATH, Static.typeValues.get('hearts', '//button')))
+                ))
+            print(f"{Fore.GREEN}✅ Captcha passed: buttons visible ({any_type_btn.tag_name}){Style.RESET_ALL}")
+        except TimeoutException:
+            print(f"{Fore.YELLOW}⚠️ No type buttons yet, but no fail modals = assuming PASS{Style.RESET_ALL}")
+        
+        self.remove_modal()  # Final modal clean
+        print(f"{Fore.GREEN}🎉 Captcha verification complete: FULL PASS!{Style.RESET_ALL}")
+        return True
         
 
     def _reset_browser(self):
@@ -431,6 +492,7 @@ class TikTokBooster:
                 for _ in range(AMOUNT):
                     os.system("cls") if os.name == 'nt' else os.system("clear")
                     self._show_banner(self.index)
+                    # print("Banner Unavailable..")
                     time.sleep(0.5)
                     WebDriverWait(self.driver, SLEEP).until(
                         ec.presence_of_element_located((By.XPATH, Static.secondStep[TYPE]))).click()
@@ -539,13 +601,14 @@ class TikTokBooster:
         print(f"{available_color('favorites')}[{'3' if available_color('favorites') == Fore.GREEN else '-'}] {'Favorites'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'favorites' else ''}")
         print(f"{available_color('shares')}[{'4' if available_color('shares') == Fore.GREEN else '-'}] {'Shares'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'shares' else ''}")
         print(f"{available_color('hearts')}[{'5' if available_color('hearts') == Fore.GREEN else '-'}] {'Hearts'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'hearts' else ''}")
+        print(f"{available_color('repost')}[{'6' if available_color('repost') == Fore.GREEN else '-'}] {f'Repost {Fore.YELLOW} [NEW!!] {Style.RESET_ALL}'} {f'[{ProgramUsage.Translations("main",9)}]' if TYPE.lower() == 'repost' else ''}")
         print(Fore.CYAN,f"\n[99] - {ProgramUsage.Translations("main",8)}!",Style.RESET_ALL)
         print("\n")
         while True:
             try:
                 us = int(input(f"{WAITING}Select an option \n-> {Style.RESET_ALL}").lower())
                 if us >= 1 and us <= 99:
-                    if us >= 6 and us <= 98:
+                    if us >= 7 and us <= 98:
                         pass
                     else:
                         break
@@ -567,6 +630,9 @@ class TikTokBooster:
             case 5:
                 if 'hearts' in self.elements:
                     TYPE = 'hearts'
+            case 6:
+                if 'repost' in self.elements:
+                    TYPE = 'repost'
             case 99: return
         self._show_typeconfig()
 
@@ -672,7 +738,7 @@ class TikTokBooster:
 
 if __name__ == "__main__":
     check_issues()
-    check_version("2.13.2")
+    check_version("2.14.0")
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")

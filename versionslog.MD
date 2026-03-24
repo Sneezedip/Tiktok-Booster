@@ -1,3 +1,8 @@
+# Version 2.14.0
+   - Fixed Auto Captcha Solving.
+   - Added Repost.
+   - Fixed AD modal errors.
+
 # Version 2.13.2
    - Bug Fixes. Manual captcha solving is now required.
 
