@@ -1,3 +1,6 @@
+# Version 2.14.1
+   - Code Otimization.
+
 # Version 2.14.0
    - Fixed Auto Captcha Solving.
    - Added Repost.

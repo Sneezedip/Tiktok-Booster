@@ -11,6 +11,7 @@ from Static.Static import Static
 from Modules.Usage import ProgramUsage
 from Modules.BannersHandler import Handler
 from Static.InitialInfo import InitialInfo
+from Modules.Session import Session
 import platform
 try:
     import hashlib
@@ -61,6 +62,8 @@ SLEEP = 15
 SKIP_WEBHOOK_VERIFICATION = config.getboolean('Settings', 'SKIP_WEBHOOK_CONFIGURATION')
 
 OPERATING_SYSTEM = platform.system()
+
+VERSION = "2.14.1"
 
 def  is_first_run():
     """Check if it's the first run of the program"""
@@ -181,6 +184,8 @@ class TikTokBooster:
         # if ProgramUsage.is_down():
         #     print(f"{WARNING}https://www.zefoy.com is currently down for maintenance. Please try again later..")
         #     sys.exit()
+        self.User_Session = Session(VERSION)
+        self.User_Session.send_heartbeat()
         self.history_selected = None
         global VIDEO
         self.elements = []
@@ -327,6 +332,7 @@ class TikTokBooster:
             return 0
 
     def _check_available(self):
+        self.User_Session.send_heartbeat()
         self.remove_modal()
         """Check if the required features are available"""
         # available = False
@@ -340,6 +346,7 @@ class TikTokBooster:
                 continue
 
     def _handle_captcha(self):
+        self.User_Session.send_heartbeat()
         self.remove_modal()
         print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}Passing Captcha{Style.RESET_ALL}")
         """Handle the captcha on the page"""
@@ -386,6 +393,7 @@ class TikTokBooster:
         return captcha_success
 
     def _is_captcha_passed(self):
+        self.User_Session.send_heartbeat()
         """Check if captcha was passed successfully"""
         print("Verifying captcha success...")
         self.remove_modal()
@@ -430,6 +438,7 @@ class TikTokBooster:
         
 
     def _reset_browser(self):
+        self.User_Session.send_heartbeat()
         """Closes and restarts the browser."""
         try:
             self.driver.quit()  # Close the current session
@@ -478,6 +487,7 @@ class TikTokBooster:
                     retries = 0  # Reset the retry counter after resetting the browser
 
     def _get_views(self):
+        self.User_Session.send_heartbeat()
         self.remove_modal()
         """Perform the main action of getting views, shares, etc."""
         max_retries = 3
@@ -490,6 +500,7 @@ class TikTokBooster:
                     ec.presence_of_element_located((By.XPATH, Static.firstStep[TYPE]))).send_keys(VIDEO)
 
                 for _ in range(AMOUNT):
+                    self.User_Session.send_heartbeat()
                     os.system("cls") if os.name == 'nt' else os.system("clear")
                     self._show_banner(self.index)
                     # print("Banner Unavailable..")
@@ -738,7 +749,7 @@ class TikTokBooster:
 
 if __name__ == "__main__":
     check_issues()
-    check_version("2.14.0")
+    check_version(VERSION)
     if not ProgramUsage.vk():
         sys.exit()
     os.system("cls") if os.name == 'nt' else os.system("clear")
