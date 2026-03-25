@@ -46,23 +46,23 @@ class TikTokVideoInfo:
         return csrf_token, response.cookies
 
     def post_tiktok_data(self, csrf_token, cookies):
-        url = "https://www.trollishly.com/nocache/search_tiktok_user_counter_val/"
-        payload = {
-            'username': self.VIDEOID
-        }
+        url = "https://tiktok-api.tokcounter.com/video/stats/{}".format(self.VIDEOID)
+        # payload = {
+        #     'username': self.VIDEOID
+        # }
         headers = {
             'User-Agent': UserAgent().random,
             'Accept': 'application/json, text/javascript, */*; q=0.01',
             'Accept-Language': 'en-US,en;q=0.9',
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Referer': 'https://www.trollishly.com/tiktok-counter/',
+            'Referer': 'https://tokcounter.com/',
             'Connection': 'keep-alive',
-            'X-CSRF-Token': csrf_token,
+            # 'X-CSRF-Token': csrf_token,
             'X-Requested-With': 'XMLHttpRequest'
         }
 
         try:
-            response = requests.post(url, data=payload, headers=headers, cookies=cookies)
+            response = requests.get(url, headers=headers, cookies=cookies)
             response.raise_for_status()
 
             if response.status_code == 200:
@@ -84,7 +84,7 @@ class TikTokVideoInfo:
                     csrf_token, cookies = self.get_csrf_token_and_cookies()
                     self.data = self.post_tiktok_data(csrf_token, cookies)
 
-                    # print(f"Data Retrieved: {self.data}") # For debugging :)
+                    # print(f"Data Retrieved: {self.data.get('viewCount','not available')}") # For debugging :)
 
                     if 'error' in self.data:
                         return self.data['error']
@@ -100,13 +100,13 @@ class TikTokVideoInfo:
             except:
                 return re.search(r'tiktok\.com/@([^/]+)/photo/', self.video_url).group(1)
         elif Views:
-            return self.data.get('video_views_count', 'View count not available')
+            return self.data.get('viewCount', 'View count not available')
         elif Likes:
-            return self.data.get('video_likes_count', 'Like count not available')
+            return self.data.get('likeCount', 'Like count not available')
         elif Shares:
-            return self.data.get('video_share_count', 'Share count not available')
+            return self.data.get('shareCount', 'Share count not available')
         elif Comments:
-            return self.data.get('video_comment_count', 'Comment count not available')
+            return self.data.get('commentCount', 'Comment count not available')
 
     def get_video_info(self, Creator=False, Views=False, Likes=False, Shares=False, Comments=False,
                        post_new_data=False):

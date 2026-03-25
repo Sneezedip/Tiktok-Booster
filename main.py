@@ -63,7 +63,7 @@ SKIP_WEBHOOK_VERIFICATION = config.getboolean('Settings', 'SKIP_WEBHOOK_CONFIGUR
 
 OPERATING_SYSTEM = platform.system()
 
-VERSION = "2.14.1"
+VERSION = "2.14.2"
 
 def  is_first_run():
     """Check if it's the first run of the program"""
@@ -235,8 +235,19 @@ class TikTokBooster:
             self.message = MESSAGE.format(self.each_views)
         except KeyError:
             self.message = MESSAGE
-        self.webhook = Discord(url=self.webhook)
-        if not SKIP_WEBHOOK_VERIFICATION:
+        if WEBHOOK.strip():  # Só cria se webhook válido
+            try:
+                self.webhook = Discord(url=WEBHOOK)
+                self.webhook.post(content="Tiktok-Booster Started!") # Quick check
+                self.is_webhook_valid = True    
+            except:
+                self.is_webhook_valid = False
+                # print(f"{WARNING}Webhook inválido, desabilitado{Style.RESET_ALL}")
+        else:
+            self.is_webhook_valid = False
+            # print(f"{INFO}Webhook vazio, desabilitado{Style.RESET_ALL}")
+        
+        if not SKIP_WEBHOOK_VERIFICATION and self.is_webhook_valid:
             self._menu()
         self.index = 0
         self.video_id = VIDEO.split("/")[5] if ProgramUsage.check_video(VIDEO) == "www" else ProgramUsage.get_vmid(VIDEO)
@@ -275,11 +286,11 @@ class TikTokBooster:
         except (TimeoutException, NoSuchElementException):
             pass
         
-        try:
-            self.webhook.post(content="Tiktok-Booster Started!") # Quick check on webhook
-            self.is_webhook_valid = True    
-        except (TimeoutException):
-            self.is_webhook_valid = False
+        # try:
+        #     self.webhook.post(content="Tiktok-Booster Started!") # Quick check on webhook
+        #     self.is_webhook_valid = True    
+        # except (TimeoutException):
+        #     self.is_webhook_valid = False
 
         max_captcha_attempts = 3
         attempt = 1

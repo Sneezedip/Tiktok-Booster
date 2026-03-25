@@ -57,10 +57,9 @@ To run the program, follow these steps:
 4. **Wait:**
    - Allow the program to run and complete its tasks. This may take some time depending on the configurations and operations being performed.
 
-# Version 2.14.0
-   - Fixed Auto Captcha Solving.
-   - Added Repost.
-   - Fixed AD modal errors.
+# Version 2.14.2
+   - fix : changed API to gather video info.
+   - fix : fixed error in webhook.
       
       
 ### for more info check [*versionslog.md*](https://github.com/Sneezedip/Tiktok-Booster/blob/main/versionslog.MD)

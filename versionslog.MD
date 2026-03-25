@@ -1,3 +1,7 @@
+# Version 2.14.2
+   - fix : changed API to gather video info.
+   - fix : fixed error in webhook.
+
 # Version 2.14.1
    - Code Otimization.
 
@@ -111,7 +115,7 @@
    - Added:
       - New menu to select the TYPE.
    - Removed:
-      - Sandbox errors when starting webdriver.rrrr   NNBÇRRRRRR
+      - Sandbox errors when starting webdriver.
 
 # Version 2.6.1
    - Fixed:
