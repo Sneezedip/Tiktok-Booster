@@ -1,3 +1,6 @@
+# Version 2.14.3
+   - fix : #google_vignette
+
 # Version 2.14.2
    - fix : changed API to gather video info.
    - fix : fixed error in webhook.

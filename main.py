@@ -63,7 +63,7 @@ SKIP_WEBHOOK_VERIFICATION = config.getboolean('Settings', 'SKIP_WEBHOOK_CONFIGUR
 
 OPERATING_SYSTEM = platform.system()
 
-VERSION = "2.14.2"
+VERSION = "2.14.3"
 
 def  is_first_run():
     """Check if it's the first run of the program"""
@@ -330,6 +330,61 @@ class TikTokBooster:
             """)
         except Exception as e:
             pass
+    def remove_ads_vignette(self):
+        """Remove Google vignette, ads, overlays with multiple fallback strategies."""
+        if "#google_vignette" not in self.driver.current_url:
+            return
+        
+        print(f"{WAITING}Ad/vignette detected. Attempting removal...")
+        
+        # Common dismiss selectors (prioritized)
+        dismiss_selectors = [
+            (By.XPATH, '//*[@id="dismiss-button"]'),
+            (By.XPATH, '//*[@id="dismiss-button"]//div'),
+            (By.XPATH, '//button[contains(@class, "close") or contains(@aria-label, "close")]'),
+            (By.XPATH, '//div[contains(@class, "close") or @role="button"]//span[text()="×" or text()="✕" or text()="X"]'),
+            (By.CSS_SELECTOR, '[data-dismiss="modal"], .close, .dismiss, [aria-label*="close"]'),
+            (By.XPATH, '//button[contains(text(), "Close") or contains(text(), "Dismiss")]'),
+        ]
+        
+        original_url = self.driver.current_url
+        removed = False
+        
+        for by, selector in dismiss_selectors:
+            try:
+                elem = WebDriverWait(self.driver, 3).until(ec.element_to_be_clickable((by, selector)))
+                self.driver.execute_script("arguments[0].click();", elem)
+                time.sleep(1)
+                
+                # Verify success
+                if "#google_vignette" not in self.driver.current_url or original_url != self.driver.current_url:
+                    print(f"{SUCCESS}Ad removed via: {selector}")
+                    removed = True
+                    break
+                    
+            except (TimeoutException, NoSuchElementException):
+                continue  # Try next selector
+        
+        # Fallback: JS overlay removal
+        if not removed:
+            self.driver.execute_script("""
+                // Remove common ad overlays
+                document.querySelectorAll('[id*="google"], .fc-above-fold-separator, .ad-overlay, iframe[src*="google"], #google_vignette ~ *').forEach(el => {
+                    el.style.display = 'none';
+                    el.remove();
+                });
+                // Focus main content
+                const mainContent = document.querySelector('main, #main, body > *:nth-child(1)');
+                if (mainContent) mainContent.scrollIntoView();
+                // Force URL clean
+                if (window.location.hash === "#google_vignette") {
+                    history.replaceState(null, "", window.location.pathname + window.location.search);
+                }
+            """)
+            print(f"{INFO}JS fallback applied for ad removal.")
+        
+        if "#google_vignette" in self.driver.current_url:
+            print(f"{WARNING}Ad/vignette persists - may need manual intervention.")
 
     def _get_initial_views(self):
         """Get initial views based on the type"""
@@ -345,6 +400,7 @@ class TikTokBooster:
     def _check_available(self):
         self.User_Session.send_heartbeat()
         self.remove_modal()
+        self.remove_ads_vignette()
         """Check if the required features are available"""
         # available = False
         for type,xpath in Static.typeValues.items():
@@ -359,6 +415,7 @@ class TikTokBooster:
     def _handle_captcha(self):
         self.User_Session.send_heartbeat()
         self.remove_modal()
+        self.remove_ads_vignette()
         print(f"{datetime.now().strftime('%H:%M:%S')} {WAITING}Passing Captcha{Style.RESET_ALL}")
         """Handle the captcha on the page"""
 
@@ -369,9 +426,9 @@ class TikTokBooster:
         
         captcha_text = pytesseract.image_to_string(Image.open('Captcha/captcha.png')).strip()
         if len(captcha_text) <= 0:
-            captcha_text = ''
-            
+            captcha_text = '' 
         try:
+
             input_field = WebDriverWait(self.driver, SLEEP).until(
                 ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/input')))
             input_field.clear()
@@ -382,8 +439,24 @@ class TikTokBooster:
             return False
 
         print(f"{Fore.CYAN}🔍 About to click submit button...{Style.RESET_ALL}") 
-        submit_btn = WebDriverWait(self.driver, SLEEP).until(
-            ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/div/button')))
+
+        self.remove_modal()
+        self.remove_ads_vignette()
+
+        try:
+            submit_btn = WebDriverWait(self.driver, 5).until(
+                ec.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/form/div/div/div/div/button')))
+        
+            try:
+                if WebDriverWait(self.driver, 3).until(
+                    ec.presence_of_element_located((By.XPATH, '//*[@id="qewarjh"]/div/div/div[3]/button'))):
+                    self.driver.refresh()
+                    return False
+            except:
+                pass
+        except:
+            self.driver.refresh()
+            return False
             
         try:
             time.sleep(2)
@@ -408,44 +481,61 @@ class TikTokBooster:
         """Check if captcha was passed successfully"""
         print("Verifying captcha success...")
         self.remove_modal()
+        self.remove_ads_vignette()
         time.sleep(5)
         
-        # Multiple fail indicators
+
         fail_selectors = [
             (By.CLASS_NAME, 'btn btn-secondary col-sm'),  # New captcha button
-            (By.XPATH, '/html/body/div[5]/div[2]/form'),  # Captcha form still present
-            (By.XPATH, '/html/body/div[5]/div[2]/form/div/div/img')  # Captcha image
+            (By.XPATH, '//*[@id="qewarjh"]/div/div/div[3]/button')
         ]
-        
-        for by, selector in fail_selectors:
+        for by,selector in fail_selectors:
             try:
-                WebDriverWait(self.driver, 3).until(ec.presence_of_element_located((by, selector)))
-                print(f"{Fore.RED}❌ Captcha fail detected: {selector} – closing...{Style.RESET_ALL}")
-                close_btn = self.driver.find_element(by, selector)
-                self.driver.execute_script("arguments[0].click();", close_btn)
-                print(f"{Fore.YELLOW}🔄 Closed error modal, screenshot for debug{Style.RESET_ALL}")
-                self.driver.save_screenshot('Captcha/debug_fail.png')
-                time.sleep(2)
+                WebDriverWait(self.driver,SLEEP).until(
+                    ec.presence_of_element_located((by, selector))
+                )
+                self.driver.refresh()
                 return False
-            except Exception as e:
-                return True
-            except TimeoutException:
+            except:
                 continue
+        return True
+        
+        # Multiple fail indicators
+        # fail_selectors = [
+        #     (By.CLASS_NAME, 'btn btn-secondary col-sm'),  # New captcha button
+        #     (By.XPATH, '/html/body/div[5]/div[2]/form'),  # Captcha form still present
+        #     (By.XPATH, '/html/body/div[5]/div[2]/form/div/div/img')  # Captcha image
+        # ]
+        
+        # for by, selector in fail_selectors:
+        #     try:
+        #         WebDriverWait(self.driver, 3).until(ec.presence_of_element_located((by, selector)))
+        #         print(f"{Fore.RED}❌ Captcha fail detected: {selector} – closing...{Style.RESET_ALL}")
+        #         close_btn = self.driver.find_element(by, selector)
+        #         self.driver.execute_script("arguments[0].click();", close_btn)
+        #         print(f"{Fore.YELLOW}🔄 Closed error modal, screenshot for debug{Style.RESET_ALL}")
+        #         self.driver.save_screenshot('Captcha/debug_fail.png')
+        #         time.sleep(2)
+        #         return False
+        #     except Exception as e:
+        #         return True
+        #     except TimeoutException:
+        #         continue
         
         # Conservative success: if no fail selectors + any button visible
-        try:
-            any_type_btn = WebDriverWait(self.driver, 8).until(
-                ec.any_of(
-                    ec.presence_of_element_located((By.XPATH, Static.typeValues.get('views', '//button'))),
-                    ec.presence_of_element_located((By.XPATH, Static.typeValues.get('hearts', '//button')))
-                ))
-            print(f"{Fore.GREEN}✅ Captcha passed: buttons visible ({any_type_btn.tag_name}){Style.RESET_ALL}")
-        except TimeoutException:
-            print(f"{Fore.YELLOW}⚠️ No type buttons yet, but no fail modals = assuming PASS{Style.RESET_ALL}")
+        # try:
+        #     any_type_btn = WebDriverWait(self.driver, 8).until(
+        #         ec.any_of(
+        #             ec.presence_of_element_located((By.XPATH, Static.typeValues.get('views', '//button'))),
+        #             ec.presence_of_element_located((By.XPATH, Static.typeValues.get('hearts', '//button')))
+        #         ))
+        #     print(f"{Fore.GREEN}✅ Captcha passed: buttons visible ({any_type_btn.tag_name}){Style.RESET_ALL}")
+        # except TimeoutException:
+        #     print(f"{Fore.YELLOW}⚠️ No type buttons yet, but no fail modals = assuming PASS{Style.RESET_ALL}")
         
-        self.remove_modal()  # Final modal clean
-        print(f"{Fore.GREEN}🎉 Captcha verification complete: FULL PASS!{Style.RESET_ALL}")
-        return True
+        # self.remove_modal()  # Final modal clean
+        # print(f"{Fore.GREEN}🎉 Captcha verification complete: FULL PASS!{Style.RESET_ALL}")
+        # return True
         
 
     def _reset_browser(self):
@@ -476,6 +566,7 @@ class TikTokBooster:
 
     def _select_type(self):
         self.remove_modal()
+        self.remove_ads_vignette()
         """Select the type of action to perform"""
         max_retries = 3
         retries = 0
@@ -500,6 +591,7 @@ class TikTokBooster:
     def _get_views(self):
         self.User_Session.send_heartbeat()
         self.remove_modal()
+        self.remove_ads_vignette()
         """Perform the main action of getting views, shares, etc."""
         max_retries = 3
         retries = 0
@@ -512,6 +604,7 @@ class TikTokBooster:
 
                 for _ in range(AMOUNT):
                     self.User_Session.send_heartbeat()
+                    self.remove_ads_vignette()
                     os.system("cls") if os.name == 'nt' else os.system("clear")
                     self._show_banner(self.index)
                     # print("Banner Unavailable..")
@@ -537,17 +630,18 @@ class TikTokBooster:
                                     time.sleep(1)
                                     total_seconds -= 1
                                 print()
-
+                        self.remove_ads_vignette()
                     except Exception as e:
                         print(f"{WARNING}An exception occurred: {e}")
                         continue
-
+                    self.remove_ads_vignette()
                     time.sleep(2)
                     WebDriverWait(self.driver, SLEEP).until(
                         ec.presence_of_element_located((By.XPATH, Static.fourthStep[TYPE]))).click()
                     time.sleep(2)
 
                     try:
+                        self.remove_ads_vignette()
                         if not ProgramUsage.vk():
                             sys.exit()
                         WebDriverWait(self.driver, SLEEP).until(
