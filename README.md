@@ -10,10 +10,6 @@
 TikTok View Booster is a Python-based tool designed to increase the view count of TikTok videos. This tool utilizes Tesseract OCR to recognize and bypass CAPTCHA challenges, ensuring a seamless and automated process for boosting video views.
 
 <div align="center">
-   
-## PRO HERE : [CLICK HERE](https://socialbooster.astck.com/)
-   
-## OFFICIAL WEBSITE : [CLICK HERE](https://tiktokbooster.online)
 
 [![Paypal](https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=PayPal)](https://paypal.me/sneezedip)
 
