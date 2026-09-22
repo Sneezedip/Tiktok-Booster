@@ -684,8 +684,8 @@
             }
         ]
     }
-],
-"ar": [
+    ],
+    "ar": [
     {
         "credits": [
             {
@@ -782,8 +782,8 @@
             }
         ]
     }
-],
-"ja": [
+    ],
+    "ja": [
     {
         "credits": [
             {
@@ -880,6 +880,104 @@
             }
         ]
     }
-]
+    ],
+    "vi": [
+    {
+        "credits":[
+            {
+                "id" : 0,
+                "text" : "Được cung cấp bởi "
+            },
+            {
+                "id" : 1,
+                "text" : "Tham gia Discord của chúng tôi để nhận thêm công cụ! "
+            }
+        ],
+        "updates":[
+            {
+                "id": 0,
+                "text" : "PHIÊN BẢN MỚI ĐƯỢC TÌM THẤY. Bạn có muốn cập nhật không? (y/n)"
+            },
+            {
+                "id": 1,
+                "text" : "Đang tải xuống Tesseract, vui lòng chờ..."
+            }
+        ],
+        "history":[
+            {
+                "id": 0,
+                "text" : "[LỊCH SỬ] Chọn một video:"
+            },
+            {
+                "id": 1,
+                "text" : "Nhập số của video bạn muốn chọn"
+            },
+            {
+                "id": 2,
+                "text" : "(hoặc 0 để tạo mới): "
+            }
+        ],
+        "errors":[
+            {
+                "id": 0,
+                "text" : "[LỖI] Lựa chọn không hợp lệ."
+            },
+            {
+                "id": 1,
+                "text" : "[LỖI] Đầu vào không hợp lệ."
+            },
+            {
+                "id" : 2,
+                "text":"URL video không hợp lệ. Vui lòng thay đổi."
+            },
+            {
+                "id":3,
+                "text":"Thêm mới -> "
+            }
+        ],
+        "main":[
+            {
+                "id": 0,
+                "text" : "Đang vượt CAPTCHA..."
+            },
+            {
+                "id": 1,
+                "text" : "Đang chờ "
+            },
+            {
+                "id": 2,
+                "text" : "phút"
+            },
+            {
+                "id": 3,
+                "text" : "giây trước khi tăng lượt xem! "
+            },
+            {
+                "id": 4,
+                "text" : "+1000 lượt xem đã được thêm thành công!"
+            },
+            {
+                "id": 5,
+                "text" : "+50 lượt chia sẻ đã được thêm thành công!"
+            },
+            {
+                "id": 6,
+                "text" : "+100 lượt yêu thích đã được thêm thành công!"
+            },
+            {
+                "id": 7,
+                "text" : "+10 lượt thả tim đã được thêm thành công!"
+            },
+            {
+                "id": 8,
+                "text" : "Bắt đầu!"
+            },
+            {
+                "id": 9,
+                "text" : "ĐÃ CHỌN"
+            }
+        ]
+    }
+    ]
 }
 }
